@@ -1,0 +1,39 @@
+{
+  "name": "starterkit-webapp",
+  "version": "0.1.0",
+  "description": "Lightweight starting point for a web app.",
+  "main": "index.html",
+  "scripts": {
+    "start": "gulp"
+  },
+  "author": "@moklick <mo@webkid.io>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.9.0",
+    "babel-eslint": "^7.1.1",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "browser-sync": "^2.12.8",
+    "del": "^2.2.0",
+    "eslint": "^3.12.2",
+    "eslint-loader": "^1.3.0",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-livereload": "^3.8.1",
+    "gulp-load-plugins": "^1.2.4",
+    "gulp-size": "^2.1.0",
+    "gulp-stylus": "^2.3.1",
+    "gulp-util": "^3.0.7",
+    "gulp-watch": "^4.3.6",
+    "gulp-webpack": "^1.5.0",
+    "lodash.assign": "^4.0.9",
+    "merge": "^1.2.0",
+    "webpack": "^1.13.1",
+    "webpack-stream": "^3.2.0"
+  },
+  "dependencies": {
+    "leaflet": "^1.1.0",
+    "turf-bezier": "^3.0.12"
+  }
+}
