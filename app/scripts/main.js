@@ -1,8 +1,7 @@
-// const swoopyArrowHelper = require('./swoopyArrow').default;
 const TurfBezier = require('turf-bezier');
 const L = require('leaflet');
 const curve = require('leaflet-curve');
-
+const shortid = require('shortid');
 
 const map = L.map('map', {
   renderer: L.svg()
@@ -16,7 +15,10 @@ L.SwoopyArrow = L.Layer.extend({
   options: {
     fromLatlng: [],
     toLatlng: [],
-    htmlLabel: ''
+    htmlLabel: '',
+    color: 'black',
+    labelClass: '',
+    weight: 1
   },
 
   initialize: function (options) {
@@ -25,13 +27,19 @@ L.SwoopyArrow = L.Layer.extend({
     this._fromLatlng = L.latLng(this.options.fromLatlng);
     this._toLatlng = L.latLng(this.options.toLatlng);
     this._htmlLabel = this.options.htmlLabel;
+    this._color = this.options.color;
+    this._labelClass = this.options.labelClass;
+    this._weight = this.options.weight;
 
     this._initSVG();
   },
 
   _initSVG: function () {
     this._svg = L.SVG.create('svg');
+    this._currentId = shortid.generate();
 
+    this._arrow = this._createArrow();
+    this._svg.appendChild(this._arrow);
     const swoopyArrowNode = document.querySelector('#swoopyarrow__arrowhead');
 
     // just create the arrow once
@@ -56,11 +64,12 @@ L.SwoopyArrow = L.Layer.extend({
   },
 
   _createArrow: function () {
-    const container = L.SVG.create('defs');
+    this._container = this._container || L.SVG.create('defs');
     const marker = L.SVG.create('marker');
     const path = L.SVG.create('polyline');
 
-    marker.setAttribute('id', 'swoopyarrow__arrowhead');
+    marker.setAttribute('id', `swoopyarrow__arrowhead${this._currentId}`);
+    L.DomUtil.addClass(marker, 'swoopyArrow__marker');
     marker.setAttribute('markerWidth', '20');
     marker.setAttribute('markerHeight', '20');
     marker.setAttribute('viewBox', '-10 -10 20 20');
@@ -68,18 +77,18 @@ L.SwoopyArrow = L.Layer.extend({
     marker.setAttribute('refX', '0');
     marker.setAttribute('refY', '0');
     marker.setAttribute('fill', 'none');
-    marker.setAttribute('stroke','black');
-    marker.setAttribute('stroke-width', '1');
+    marker.setAttribute('stroke', this._color);
+    marker.setAttribute('stroke-width', 1);
 
     path.setAttribute('stroke-linejoin', 'bevel');
     path.setAttribute('fill', 'none');
-    path.setAttribute('stroke', 'black');
+    path.setAttribute('stroke', this._color);
     path.setAttribute('points', '-6.75,-6.75 0,0 -6.75,6.75');
 
     marker.appendChild(path);
-    container.appendChild(marker);
+    this._container.appendChild(marker);
 
-    return container;
+    return this._container;
   },
 
   _createPath: function () {
@@ -93,16 +102,17 @@ L.SwoopyArrow = L.Layer.extend({
 
       ], {
         animate: false,
-        color: 'black',
+        color: this._color,
         fill: false,
-        weight: 1,
+        weight: this._weight,
         className: 'swoopyarrow__path'
       }
     ).addTo(map);
 
-    const pathNode = document.querySelectorAll('.swoopyarrow__path');
-    pathNode.forEach(node => node.setAttribute('marker-end', 'url(#swoopyarrow__arrowhead)'))
-    return pathNode;
+    pathOne._path.setAttribute('id', `swoopyarrow__path${this._currentId}`);
+    pathOne._path.setAttribute('marker-end', `url(#swoopyarrow__arrowhead${this._currentId})`);
+    
+    return pathOne;
   },
 
   _calcBezierControlPoints: function (firstPoint, lastPoint, factor) {
@@ -113,7 +123,12 @@ L.SwoopyArrow = L.Layer.extend({
   },
 
   _createLabel: function() {
-    return L.divIcon({className: 'swoopyarrow__label', html: this._htmlLabel, iconAnchor: [this._fromLatlng.lat, this._fromLatlng.lng], iconSize: 'auto'})
+    return L.divIcon({
+      className: this._labelClass, 
+      html: this._htmlLabel, 
+      iconAnchor: [this._fromLatlng.lat, this._fromLatlng.lng], 
+      iconSize: 'auto'
+    });
   },
 
   update: function () {
@@ -132,7 +147,10 @@ function swoopyArrow(options) {
 swoopyArrow({
   fromLatlng: [52.52, 13.4],
   toLatlng: [52.525, 14.405],
-  htmlLabel: 'From A to B'
+  htmlLabel: '<h2>From A to B</h2>',
+  color: 'red',
+  labelClass: 'my-custom-class',
+  weight: 2
 }).addTo(map)
 
 swoopyArrow({

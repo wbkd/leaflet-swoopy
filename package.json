@@ -35,6 +35,7 @@
   "dependencies": {
     "leaflet": "^1.1.0",
     "leaflet-curve": "^1.0.0",
+    "shortid": "^2.2.8",
     "turf-bezier": "^3.0.12"
   }
 }
