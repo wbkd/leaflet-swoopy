@@ -2,8 +2,10 @@
 const swoopyArrowHelper = require('./swoopyArrow').default;
 const TurfBezier = require('turf-bezier');
 const L = require('leaflet');
+const curve = require('leaflet-curve');
 
-const map = L.map('map').setView([52.52, 13.4], 13);
+
+const map = L.map('map').setView([52.52, 13.4], 9);
 
 L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -81,7 +83,28 @@ function swoopyArrow(options) {
   return new L.SwoopyArrow(options);
 }
 
- swoopyArrow({
-   fromLatlng: [52.52, 13.4],
-   toLatlng: [52.525, 14.405]
- }).addTo(map)
+//  swoopyArrow({
+//    fromLatlng: [52.52, 13.4],
+//    toLatlng: [52.525, 14.405]
+//  }).addTo(map)
+
+var calcBezierControlPoints = function(firstPoint, lastPoint, factor) {
+    var xDiff = Math.abs(lastPoint.x - firstPoint.x);
+    var x1 = firstPoint.x + xDiff / 2;
+    var y1 = lastPoint.y + xDiff / factor;
+    return ([y1, x1]);
+}
+
+//quadratic bezier curve
+var curvePoint = calcBezierControlPoints({y: 52.4, x: 13.4}, {y:52.525, x:14.405}, 8);
+
+var pathOne = L.curve(
+  [
+   'M', [52.4, 13.4],
+   'Q', curvePoint,
+       [52.525, 14.405]
+  ], {animate: false, color:'red', fill:false}
+).addTo(map);
+                
+
+             
