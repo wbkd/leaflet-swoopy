@@ -16,6 +16,7 @@ L.SwoopyArrow = L.Layer.extend({
   options: {
     fromLatlng: [],
     toLatlng: [],
+    htmlLabel: ''
   },
 
   initialize: function (options) {
@@ -23,6 +24,7 @@ L.SwoopyArrow = L.Layer.extend({
 
     this._fromLatlng = L.latLng(this.options.fromLatlng);
     this._toLatlng = L.latLng(this.options.toLatlng);
+    this._htmlLabel = this.options.htmlLabel;
 
     this._initSVG();
   },
@@ -30,8 +32,13 @@ L.SwoopyArrow = L.Layer.extend({
   _initSVG: function () {
     this._svg = L.SVG.create('svg');
 
-    this._arrow = this._createArrow();
-    this._svg.appendChild(this._arrow);
+    const swoopyArrowNode = document.querySelector('#swoopyarrow__arrowhead');
+
+    // just create the arrow once
+    if (!swoopyArrowNode) {
+      this._arrow = this._createArrow();
+      this._svg.appendChild(this._arrow);
+    }
   },
 
   onAdd: function (map) {
@@ -40,7 +47,6 @@ L.SwoopyArrow = L.Layer.extend({
 
     this.update();
   },
-
 
   getEvents: function () {
     return {
@@ -54,9 +60,6 @@ L.SwoopyArrow = L.Layer.extend({
     const marker = L.SVG.create('marker');
     const path = L.SVG.create('polyline');
 
-    L.DomUtil.addClass(marker, 'leaflet-swoopyarrow');
-    L.DomUtil.addClass(path, 'leaflet-swoopyarrow__path');
-
     marker.setAttribute('id', 'swoopyarrow__arrowhead');
     marker.setAttribute('markerWidth', '20');
     marker.setAttribute('markerHeight', '20');
@@ -65,12 +68,12 @@ L.SwoopyArrow = L.Layer.extend({
     marker.setAttribute('refX', '0');
     marker.setAttribute('refY', '0');
     marker.setAttribute('fill', 'none');
-    marker.setAttribute('stroke', 'red');
+    marker.setAttribute('stroke','black');
     marker.setAttribute('stroke-width', '1');
 
     path.setAttribute('stroke-linejoin', 'bevel');
     path.setAttribute('fill', 'none');
-    path.setAttribute('stroke', 'red');
+    path.setAttribute('stroke', 'black');
     path.setAttribute('points', '-6.75,-6.75 0,0 -6.75,6.75');
 
     marker.appendChild(path);
@@ -90,16 +93,15 @@ L.SwoopyArrow = L.Layer.extend({
 
       ], {
         animate: false,
-        color: 'red',
+        color: 'black',
         fill: false,
         weight: 1,
-        className: 'pathone'
+        className: 'swoopyarrow__path'
       }
     ).addTo(map);
 
-    const pathNode = document.querySelector('.pathone');
-    pathNode.setAttribute('marker-end', 'url(#swoopyarrow__arrowhead)');
-
+    const pathNode = document.querySelectorAll('.swoopyarrow__path');
+    pathNode.forEach(node => node.setAttribute('marker-end', 'url(#swoopyarrow__arrowhead)'))
     return pathNode;
   },
 
@@ -110,9 +112,15 @@ L.SwoopyArrow = L.Layer.extend({
     return ([y1, x1]);
   },
 
+  _createLabel: function() {
+    return L.divIcon({className: 'swoopyarrow__label', html: this._htmlLabel, iconAnchor: [this._fromLatlng.lat, this._fromLatlng.lng], iconSize: 'auto'})
+  },
+
   update: function () {
     const swoopyPath = this._createPath();
+    const swoopyLabel = this._createLabel();
 
+    L.marker([this._fromLatlng.lat, this._fromLatlng.lng], { icon: swoopyLabel }).addTo( this._map);
     return this;
   }
 })
@@ -123,5 +131,12 @@ function swoopyArrow(options) {
 
 swoopyArrow({
   fromLatlng: [52.52, 13.4],
-  toLatlng: [52.525, 14.405]
+  toLatlng: [52.525, 14.405],
+  htmlLabel: 'From A to B'
+}).addTo(map)
+
+swoopyArrow({
+  fromLatlng: [53.52, 13.4],
+  toLatlng: [53.525, 14.405],
+  htmlLabel: 'From C to D'
 }).addTo(map)
