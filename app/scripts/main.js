@@ -20,18 +20,23 @@ L.SwoopyArrow = L.Layer.extend({
     htmlLabel: '',
     color: 'black',
     labelClass: '',
-    weight: 1
+    opacity: 1,
+    minZoom: 0,
+    maxZoom: 22
   },
 
   initialize: function (options) {
     L.Util.setOptions(this, options);
 
+    this._currentPathVisible = true;
     this._fromLatlng = L.latLng(this.options.fromLatlng);
     this._toLatlng = L.latLng(this.options.toLatlng);
     this._htmlLabel = this.options.htmlLabel;
     this._color = this.options.color;
     this._labelClass = this.options.labelClass;
-    this._weight = this.options.weight;
+    this._opacity = this.options.opacity;
+    this._minZoom = this.options.minZoom;
+    this._maxZoom = this.options.maxZoom;
 
     this._initSVG();
   },
@@ -42,18 +47,12 @@ L.SwoopyArrow = L.Layer.extend({
 
     this._arrow = this._createArrow();
     this._svg.appendChild(this._arrow);
-    const swoopyArrowNode = document.querySelector('#swoopyarrow__arrowhead');
-
-    // just create the arrow once
-    if (!swoopyArrowNode) {
-      this._arrow = this._createArrow();
-      this._svg.appendChild(this._arrow);
-    }
   },
 
   onAdd: function (map) {
     this._map = map;
     this.getPane().appendChild(this._svg);
+    this._drawSwoopyArrows();
 
     this.update();
   },
@@ -63,6 +62,15 @@ L.SwoopyArrow = L.Layer.extend({
       zoom: this.update,
       viewreset: this.update
     };
+  },
+
+  _drawSwoopyArrows: function() {
+    const swoopyPath = this._createPath();
+    this._currentPath = swoopyPath._path;
+
+    const swoopyLabel = this._createLabel();
+
+    this._currentMarker = L.marker([this._fromLatlng.lat, this._fromLatlng.lng], { icon: swoopyLabel }).addTo( this._map);
   },
 
   _createArrow: function () {
@@ -81,6 +89,7 @@ L.SwoopyArrow = L.Layer.extend({
     marker.setAttribute('fill', 'none');
     marker.setAttribute('stroke', this._color);
     marker.setAttribute('stroke-width', 1);
+    marker.setAttribute('opacity', this._opacity);
 
     path.setAttribute('stroke-linejoin', 'bevel');
     path.setAttribute('fill', 'none');
@@ -108,7 +117,8 @@ L.SwoopyArrow = L.Layer.extend({
         animate: false,
         color: this._color,
         fill: false,
-        weight: this._weight,
+        opacity: this._opacity,
+        weight: 1,
         className: 'swoopyarrow__path'
       }
     ).addTo(map);
@@ -175,7 +185,24 @@ L.SwoopyArrow = L.Layer.extend({
     L.circle([point.lat, point.lng], {radius: 200}).addTo(this._map);
     L.marker([this._fromLatlng.lat, this._fromLatlng.lng], { icon: swoopyLabel }).addTo( this._map);
     return this;
+  },
+
+  _checkZoomLevel: function() {
+    const currentZoomLevel = this._map.getZoom();
+
+    if(!this._currentPathVisible) {
+      this._currentPath.setAttribute('opacity', this._opacity);
+      this._currentMarker.setOpacity(this._opacity);
+    }
+
+    if(currentZoomLevel < this._minZoom || currentZoomLevel > this._maxZoom) {
+      this._currentPath.setAttribute('opacity', 0);
+      this._currentMarker.setOpacity(0);
+
+      this._currentPathVisible = false;
+    }
   }
+
 })
 
 function swoopyArrow(options) {
@@ -188,7 +215,9 @@ swoopyArrow({
   htmlLabel: '<h2>From A to B</h2>',
   color: 'red',
   labelClass: 'my-custom-class',
-  weight: 2
+  opacity: .62,
+  minZoom: 7,
+  maxZoom: 11
 }).addTo(map)
 
 
