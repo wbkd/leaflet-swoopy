@@ -70,14 +70,14 @@ function log(){
   if(!DEBUG) {
     return false;
   }
-  
+
   let args = Array.prototype.slice.call(arguments);
 
   if(args.length === 1){
     args = args[0];
   }
 
-  console.log(args);  
+  console.log(args);
 }
 
 export default {
