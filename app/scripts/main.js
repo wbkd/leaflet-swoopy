@@ -156,20 +156,23 @@ L.SwoopyArrow = L.Layer.extend({
   },
 
   update: function () {
-    this._currentMarker = this._createLabel();
+    //this._currentMarker = this._createLabel();
+    this._checkZoomLevel();
 
     const arrowHead = this._svg.getElementById(`swoopyarrow__arrowhead${this._currentId}`);
 
     arrowHead.setAttribute('markerWidth', `${2.5 * this._map.getZoom()}`);
     arrowHead.setAttribute('markerHeight', `${2.5 * this._map.getZoom()}`);
 
-    L.circle([this._controlLatlng.lat, this._controlLatlng.lng], {radius: 200}).addTo(this._map);
-    L.marker([this._fromLatlng.lat, this._fromLatlng.lng], { icon: this._currentMarker }).addTo( this._map);
+    //L.marker([this._fromLatlng.lat, this._fromLatlng.lng], { icon: this._currentMarker }).addTo( this._map);
     return this;
   },
 
   _checkZoomLevel: function() {
     const currentZoomLevel = this._map.getZoom();
+
+    console.log(currentZoomLevel);
+    console.log(this._currentMarker);
 
     if(!this._currentPathVisible) {
       this._currentPath.setAttribute('opacity', this._opacity);
@@ -197,8 +200,8 @@ swoopyArrow({
   color: 'red',
   labelClass: 'my-custom-class',
   opacity: .62,
-  minZoom: 7,
-  maxZoom: 11
+  minZoom: 2,
+  maxZoom: 6
 }).addTo(map)
 
 
