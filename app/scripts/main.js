@@ -125,6 +125,7 @@ L.SwoopyArrow = L.Layer.extend({
   },
 
 
+
   _getControlPoint: function (start, end) {
 
     const features = turf.featureCollection([
@@ -155,13 +156,10 @@ L.SwoopyArrow = L.Layer.extend({
   },
 
   update: function () {
-    const swoopyPath = this._createPath();
-    const swoopyLabel = this._createLabel();
-
-    const point = this._controlLatlng;
-
-    L.circle([point.lat, point.lng], {radius: 200}).addTo(this._map);
-    L.marker([this._fromLatlng.lat, this._fromLatlng.lng], { icon: swoopyLabel }).addTo( this._map);
+    this._currentMarker = this._createLabel();
+    
+    L.circle([this._controlLatlng.lat, this._controlLatlng.lng], {radius: 200}).addTo(this._map);
+    L.marker([this._fromLatlng.lat, this._fromLatlng.lng], { icon: this._currentMarker }).addTo( this._map);
     return this;
   },
 
