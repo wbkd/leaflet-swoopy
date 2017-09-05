@@ -157,7 +157,12 @@ L.SwoopyArrow = L.Layer.extend({
 
   update: function () {
     this._currentMarker = this._createLabel();
-    
+
+    const arrowHead = this._svg.getElementById(`swoopyarrow__arrowhead${this._currentId}`);
+
+    arrowHead.setAttribute('markerWidth', `${2.5 * this._map.getZoom()}`);
+    arrowHead.setAttribute('markerHeight', `${2.5 * this._map.getZoom()}`);
+
     L.circle([this._controlLatlng.lat, this._controlLatlng.lng], {radius: 200}).addTo(this._map);
     L.marker([this._fromLatlng.lat, this._fromLatlng.lng], { icon: this._currentMarker }).addTo( this._map);
     return this;
