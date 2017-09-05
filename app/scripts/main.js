@@ -31,6 +31,7 @@ L.SwoopyArrow = L.Layer.extend({
     this._currentPathVisible = true;
     this._fromLatlng = L.latLng(this.options.fromLatlng);
     this._toLatlng = L.latLng(this.options.toLatlng);
+    this._controlLatlng = L.latLng(this._getControlPoint(L.latLng(this.options.fromLatlng), L.latLng(this.options.toLatlng)));
     this._htmlLabel = this.options.htmlLabel;
     this._color = this.options.color;
     this._labelClass = this.options.labelClass;
@@ -69,7 +70,6 @@ L.SwoopyArrow = L.Layer.extend({
     this._currentPath = swoopyPath._path;
 
     const swoopyLabel = this._createLabel();
-
     this._currentMarker = L.marker([this._fromLatlng.lat, this._fromLatlng.lng], { icon: swoopyLabel }).addTo( this._map);
   },
 
@@ -103,15 +103,10 @@ L.SwoopyArrow = L.Layer.extend({
   },
 
   _createPath: function () {
-    //quadratic bezier curve
-    //const curvePoint = this._calcBezierControlPoints(this._fromLatlng, this._toLatlng, 8);
-
-    const point = this._computePoint(this._fromLatlng, this._toLatlng);
-
     const pathOne = L.curve(
       [
         'M', [this._fromLatlng.lat, this._fromLatlng.lng],
-        'Q', [point.lat, point.lng], [this._toLatlng.lat, this._toLatlng.lng]
+        'Q', [this._controlLatlng.lat, this._controlLatlng.lng], [this._toLatlng.lat, this._toLatlng.lng]
 
       ], {
         animate: false,
@@ -129,18 +124,8 @@ L.SwoopyArrow = L.Layer.extend({
     return pathOne;
   },
 
-  _calcBezierControlPoints: function (firstPoint, lastPoint, factor) {
 
-
-
-    const xDiff = Math.abs(lastPoint.lng - firstPoint.lng);
-    const x1 = firstPoint.lng + xDiff / 2;
-    const y1 = lastPoint.lat + xDiff / factor;
-    return ([y1, x1]);
-  },
-
-
-  _computePoint: function (start, end) {
+  _getControlPoint: function (start, end) {
 
     const features = turf.featureCollection([
       turf.point( [start.lat, start.lng]),
@@ -151,16 +136,10 @@ L.SwoopyArrow = L.Layer.extend({
 
     // get pixel coordinates for start, end and center
     const startPx = map.latLngToContainerPoint(start);
-    const endPx = map.latLngToContainerPoint(end);
     const centerPx = map.latLngToContainerPoint(L.latLng(center.geometry.coordinates[0], center.geometry.coordinates[1]));
 
-
     const newCoord = rotatePoint(centerPx, startPx, 90);
-
-    console.log(newCoord);
-
     const point = L.point(newCoord.x, newCoord.y);
-
 
     return map.containerPointToLatLng(point);
   },
@@ -179,8 +158,7 @@ L.SwoopyArrow = L.Layer.extend({
     const swoopyPath = this._createPath();
     const swoopyLabel = this._createLabel();
 
-    const point = this._computePoint(this._fromLatlng, this._toLatlng);
-    console.log(point);
+    const point = this._controlLatlng;
 
     L.circle([point.lat, point.lng], {radius: 200}).addTo(this._map);
     L.marker([this._fromLatlng.lat, this._fromLatlng.lng], { icon: swoopyLabel }).addTo( this._map);
@@ -231,8 +209,8 @@ function rotatePoint(origin, point, angle) {
 }
 
 
-// swoopyArrow({
-//   fromLatlng: [53.52, 13.4],
-//   toLatlng: [53.525, 14.405],
-//   htmlLabel: 'From C to D'
-// }).addTo(map)
+swoopyArrow({
+  fromLatlng: [53.52, 13.4],
+  toLatlng: [53.525, 14.405],
+  htmlLabel: 'From C to D'
+}).addTo(map)
