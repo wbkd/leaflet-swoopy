@@ -33,6 +33,7 @@ L.SwoopyArrow = L.Layer.extend({
     this._toLatlng = L.latLng(this.options.toLatlng);
     this._controlLatlng = L.latLng(this._getControlPoint(L.latLng(this.options.fromLatlng), L.latLng(this.options.toLatlng)));
     this._htmlLabel = this.options.htmlLabel;
+    this._labelSize = this.options.labelSize;
     this._color = this.options.color;
     this._labelClass = this.options.labelClass;
     this._opacity = this.options.opacity;
@@ -53,9 +54,10 @@ L.SwoopyArrow = L.Layer.extend({
   onAdd: function (map) {
     this._map = map;
     this.getPane().appendChild(this._svg);
+
     this._drawSwoopyArrows();
 
-    this.update();
+    this.update(this._map);
   },
 
   getEvents: function () {
@@ -127,7 +129,6 @@ L.SwoopyArrow = L.Layer.extend({
 
 
   _getControlPoint: function (start, end) {
-
     const features = turf.featureCollection([
       turf.point( [start.lat, start.lng]),
       turf.point( [end.lat, end.lng])
@@ -149,30 +150,27 @@ L.SwoopyArrow = L.Layer.extend({
   _createLabel: function() {
     return L.divIcon({
       className: this._labelClass,
-      html: this._htmlLabel,
+      html: `<span id="marker-label${this._currentId}" style="font-size: ${this._map.getZoom() * this._labelSize}px">${this._htmlLabel}</span>`,
       iconAnchor: [this._fromLatlng.lat, this._fromLatlng.lng],
       iconSize: 'auto'
     });
   },
 
-  update: function () {
-    //this._currentMarker = this._createLabel();
+  update: function (map) {
     this._checkZoomLevel();
 
     const arrowHead = this._svg.getElementById(`swoopyarrow__arrowhead${this._currentId}`);
-
     arrowHead.setAttribute('markerWidth', `${2.5 * this._map.getZoom()}`);
     arrowHead.setAttribute('markerHeight', `${2.5 * this._map.getZoom()}`);
 
-    //L.marker([this._fromLatlng.lat, this._fromLatlng.lng], { icon: this._currentMarker }).addTo( this._map);
+    const label = document.getElementById(`marker-label${this._currentId}`);
+    label.setAttribute('style', `font-size: ${this._map.getZoom() * 0.2 * this._labelSize}px;`);
+
     return this;
   },
 
   _checkZoomLevel: function() {
     const currentZoomLevel = this._map.getZoom();
-
-    console.log(currentZoomLevel);
-    console.log(this._currentMarker);
 
     if(!this._currentPathVisible) {
       this._currentPath.setAttribute('opacity', this._opacity);
@@ -189,22 +187,6 @@ L.SwoopyArrow = L.Layer.extend({
 
 })
 
-function swoopyArrow(options) {
-  return new L.SwoopyArrow(options);
-}
-
-swoopyArrow({
-  fromLatlng: [60.52, 1.4],
-  toLatlng: [52.52, 30.405],
-  htmlLabel: '<h2>From A to B</h2>',
-  color: 'red',
-  labelClass: 'my-custom-class',
-  opacity: .62,
-  minZoom: 2,
-  maxZoom: 6
-}).addTo(map)
-
-
 function rotatePoint(origin, point, angle) {
   const radians = angle * Math.PI / 180.0;
 
@@ -215,8 +197,25 @@ function rotatePoint(origin, point, angle) {
 }
 
 
+function swoopyArrow(options) {
+  return new L.SwoopyArrow(options);
+}
+
+swoopyArrow({
+  fromLatlng: [60.52, 1.4],
+  toLatlng: [52.52, 30.405],
+  htmlLabel: 'From A to B',
+  labelSize: 16,
+  color: 'red',
+  labelClass: 'my-custom-class',
+  opacity: .62,
+  minZoom: 2,
+  maxZoom: 10
+}).addTo(map)
+
 swoopyArrow({
   fromLatlng: [53.52, 13.4],
   toLatlng: [53.525, 14.405],
-  htmlLabel: 'From C to D'
+  htmlLabel: 'From C to D',
+  labelSize: 12,
 }).addTo(map)
