@@ -6,10 +6,14 @@
   <meta name="description" content="A description.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>application</title>
+  <title>Leaflet.Swoopy example</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
+  integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+  crossorigin=""></script>
   <link rel="stylesheet" href="https://unpkg.com/normalize.css/normalize.css">
+  <script src="Leaflet.SwoopyArrow.js"></script>
   <style>
   html {
     height: 100%;
@@ -31,7 +35,6 @@
 </head>
 <body>
   <div id="map"></div>
-  <script src="js/main.js"></script>
   <script>
     const map = L.map('map', {
       renderer: L.svg()

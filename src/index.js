@@ -1,7 +1,8 @@
-const L = require('leaflet');
-const curve = require('leaflet-curve');
-const shortid = require('shortid');
-const turf = require('turf');
+import L from 'leaflet';
+import 'leaflet-curve';
+import 'shortid';
+import '@turf/helpers';
+import '@turf/center';
 
 L.SwoopyArrow = L.Layer.extend({
   options: {
