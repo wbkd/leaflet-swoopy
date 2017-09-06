@@ -1,10 +1,8 @@
-# Leaflet Swoopy Playground
-
-This webapp starterkit provides a prepared development environment based on [gulp](https://github.com/gulpjs/gulp), [stylus](https://github.com/LearnBoost/stylus) and [webpack](https://github.com/webpack/webpack).
+# Leaflet SwoopyArrow
 
 ## Installation
 
-Install all dependencies. 
+Install all dependencies running:
 
 ```
 $ npm install
@@ -13,8 +11,10 @@ $ npm install
 
 ## Development
 
-Builds the application and starts a webserver with livereload. By default the webserver starts at port 3000.
+To build the application and start a webserver with livereload, run:
 
 ```
 $ npm start
 ```
+
+Then open your browser at [http://localhost:3000/](http://localhost:3000/)
