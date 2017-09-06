@@ -12,7 +12,8 @@ L.SwoopyArrow = L.Layer.extend({
     labelClass: '',
     opacity: 1,
     minZoom: 0,
-    maxZoom: 22
+    maxZoom: 22,
+    factor: 0
   },
 
   initialize: function (options) {
@@ -21,7 +22,8 @@ L.SwoopyArrow = L.Layer.extend({
     this._currentPathVisible = true;
     this._fromLatlng = L.latLng(this.options.fromLatlng);
     this._toLatlng = L.latLng(this.options.toLatlng);
-    this._controlLatlng = L.latLng(this._getControlPoint(L.latLng(this.options.fromLatlng), L.latLng(this.options.toLatlng)));
+    this._factor = this.options.factor;
+    this._controlLatlng = L.latLng(this._getControlPoint(L.latLng(this.options.fromLatlng), L.latLng(this.options.toLatlng), this.options.factor));
     this._htmlLabel = this.options.htmlLabel;
     this._labelSize = this.options.labelSize;
     this._color = this.options.color;
@@ -116,7 +118,17 @@ L.SwoopyArrow = L.Layer.extend({
     return pathOne;
   },
 
-  _getControlPoint: function (start, end) {
+
+  _rotatePoint: function (origin, point, angle) {
+    const radians = angle * Math.PI / 180.0;
+
+    return {
+      x: Math.cos(radians) * (point.x - origin.x) - Math.sin(radians) * (point.y - origin.y) + origin.x,
+      y: Math.sin(radians) * (point.x - origin.x) + Math.cos(radians) * (point.y - origin.y) + origin.y
+    };
+  },
+
+  _getControlPoint: function (start, end, factor) {
     const features = turf.featureCollection([
       turf.point( [start.lat, start.lng]),
       turf.point( [end.lat, end.lng])
@@ -127,20 +139,21 @@ L.SwoopyArrow = L.Layer.extend({
     // get pixel coordinates for start, end and center
     const startPx = map.latLngToContainerPoint(start);
     const centerPx = map.latLngToContainerPoint(L.latLng(center.geometry.coordinates[0], center.geometry.coordinates[1]));
+    const rotatedPx = this._rotatePoint(centerPx, startPx, 90);
 
-    const newCoord = this._rotatePoint(centerPx, startPx, 90);
-    const point = L.point(newCoord.x, newCoord.y);
 
-    return map.containerPointToLatLng(point);
-  },
+    const distance = Math.sqrt(Math.pow(startPx.x - centerPx.x, 2) + Math.pow(startPx.y - centerPx.y, 2));
+    const angle = Math.atan2(rotatedPx.y - centerPx.y, rotatedPx.x - centerPx.x);
 
-  _rotatePoint: function (origin, point, angle) {
-    const radians = angle * Math.PI / 180.0;
 
-    return {
-      x: Math.cos(radians) * (point.x - origin.x) - Math.sin(radians) * (point.y - origin.y) + origin.x,
-      y: Math.sin(radians) * (point.x - origin.x) + Math.cos(radians) * (point.y - origin.y) + origin.y
-    };
+    const offset = (factor * distance) - distance;
+
+    const sin = Math.sin(angle) * offset;
+    const cos = Math.cos(angle) * offset;
+
+    const controlPoint = L.point(rotatedPx.x + cos, rotatedPx.y + sin);
+
+    return map.containerPointToLatLng(controlPoint);
   },
 
   _createLabel: function() {
