@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="description" content="A description.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
- 
+
   <title>application</title>
 
   <link rel="stylesheet" href="css/main.css">
@@ -13,5 +13,33 @@
 <body>
   <div id="map"></div>
   <script src="js/main.js"></script>
+  <script>
+    var map = L.map('map', {
+      renderer: L.svg()
+    }).setView([52.52, 13.4], 5);
+
+    new L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    new L.SwoopyArrow({
+      fromLatlng: [60.52, 1.4],
+      toLatlng: [52.52, 30.405],
+      htmlLabel: 'From A to B',
+      labelSize: 16,
+      color: 'red',
+      labelClass: 'my-custom-class',
+      opacity: .62,
+      minZoom: 2,
+      maxZoom: 10
+    }).addTo(map)
+
+    new L.SwoopyArrow({
+      fromLatlng: [53.52, 13.4],
+      toLatlng: [53.525, 14.405],
+      htmlLabel: 'From C to D',
+      labelSize: 12,
+    }).addTo(map)
+  </script>
 </body>
 </html>

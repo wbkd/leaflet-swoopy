@@ -3,14 +3,6 @@ const curve = require('leaflet-curve');
 const shortid = require('shortid');
 const turf = require('turf');
 
-const map = L.map('map', {
-  renderer: L.svg()
-}).setView([52.52, 13.4], 5);
-
-L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
-  attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
-
 L.SwoopyArrow = L.Layer.extend({
   options: {
     fromLatlng: [],
@@ -189,26 +181,3 @@ L.SwoopyArrow = L.Layer.extend({
     }
   }
 })
-
-function swoopyArrow(options) {
-  return new L.SwoopyArrow(options);
-}
-
-swoopyArrow({
-  fromLatlng: [60.52, 1.4],
-  toLatlng: [52.52, 30.405],
-  htmlLabel: 'From A to B',
-  labelSize: 16,
-  color: 'red',
-  labelClass: 'my-custom-class',
-  opacity: .62,
-  minZoom: 2,
-  maxZoom: 10
-}).addTo(map)
-
-swoopyArrow({
-  fromLatlng: [53.52, 13.4],
-  toLatlng: [53.525, 14.405],
-  htmlLabel: 'From C to D',
-  labelSize: 12,
-}).addTo(map)
