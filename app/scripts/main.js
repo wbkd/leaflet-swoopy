@@ -1,9 +1,7 @@
-const TurfBezier = require('turf-bezier');
 const L = require('leaflet');
 const curve = require('leaflet-curve');
 const shortid = require('shortid');
 const turf = require('turf');
-const turfRotate = require('@turf/transform-rotate');
 
 const map = L.map('map', {
   renderer: L.svg()
@@ -126,8 +124,6 @@ L.SwoopyArrow = L.Layer.extend({
     return pathOne;
   },
 
-
-
   _getControlPoint: function (start, end) {
     const features = turf.featureCollection([
       turf.point( [start.lat, start.lng]),
@@ -140,12 +136,20 @@ L.SwoopyArrow = L.Layer.extend({
     const startPx = map.latLngToContainerPoint(start);
     const centerPx = map.latLngToContainerPoint(L.latLng(center.geometry.coordinates[0], center.geometry.coordinates[1]));
 
-    const newCoord = rotatePoint(centerPx, startPx, 90);
+    const newCoord = this._rotatePoint(centerPx, startPx, 90);
     const point = L.point(newCoord.x, newCoord.y);
 
     return map.containerPointToLatLng(point);
   },
 
+  _rotatePoint: function (origin, point, angle) {
+    const radians = angle * Math.PI / 180.0;
+
+    return {
+      x: Math.cos(radians) * (point.x - origin.x) - Math.sin(radians) * (point.y - origin.y) + origin.x,
+      y: Math.sin(radians) * (point.x - origin.x) + Math.cos(radians) * (point.y - origin.y) + origin.y
+    };
+  },
 
   _createLabel: function() {
     return L.divIcon({
@@ -184,18 +188,7 @@ L.SwoopyArrow = L.Layer.extend({
       this._currentPathVisible = false;
     }
   }
-
 })
-
-function rotatePoint(origin, point, angle) {
-  const radians = angle * Math.PI / 180.0;
-
-  return {
-    x: Math.cos(radians) * (point.x - origin.x) - Math.sin(radians) * (point.y - origin.y) + origin.x,
-    y: Math.sin(radians) * (point.x - origin.x) + Math.cos(radians) * (point.y - origin.y) + origin.y
-  };
-}
-
 
 function swoopyArrow(options) {
   return new L.SwoopyArrow(options);
