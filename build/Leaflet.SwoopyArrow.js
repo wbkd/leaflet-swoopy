@@ -1,4 +1,3 @@
-(function(l, i, v, e) { v = l.createElement(i); v.async = 1; v.src = '//' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; e = l.getElementsByTagName(i)[0]; e.parentNode.insertBefore(v, e)})(document, 'script');
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('leaflet'), require('@turf/helpers'), require('@turf/center')) :
 	typeof define === 'function' && define.amd ? define(['leaflet', '@turf/helpers', '@turf/center'], factory) :
@@ -214,7 +213,8 @@ L$1.SwoopyArrow = L$1.Layer.extend({
     labelClass: '',
     opacity: 1,
     minZoom: 0,
-    maxZoom: 22
+    maxZoom: 22,
+    factor: 0
   },
 
   initialize: function initialize(options) {
@@ -223,7 +223,8 @@ L$1.SwoopyArrow = L$1.Layer.extend({
     this._currentPathVisible = true;
     this._fromLatlng = L$1.latLng(this.options.fromLatlng);
     this._toLatlng = L$1.latLng(this.options.toLatlng);
-    this._controlLatlng = L$1.latLng(this._getControlPoint(L$1.latLng(this.options.fromLatlng), L$1.latLng(this.options.toLatlng)));
+    this._factor = this.options.factor;
+    this._controlLatlng = L$1.latLng(this._getControlPoint(L$1.latLng(this.options.fromLatlng), L$1.latLng(this.options.toLatlng), this.options.factor));
     this._htmlLabel = this.options.htmlLabel;
     this._labelSize = this.options.labelSize;
     this._color = this.options.color;
@@ -312,21 +313,6 @@ L$1.SwoopyArrow = L$1.Layer.extend({
     return pathOne;
   },
 
-  _getControlPoint: function _getControlPoint(start, end) {
-    var features = turf.featureCollection([turf.point([start.lat, start.lng]), turf.point([end.lat, end.lng])]);
-
-    var center$$1 = turf.center(features);
-
-    // get pixel coordinates for start, end and center
-    var startPx = map.latLngToContainerPoint(start);
-    var centerPx = map.latLngToContainerPoint(L$1.latLng(center$$1.geometry.coordinates[0], center$$1.geometry.coordinates[1]));
-
-    var newCoord = this._rotatePoint(centerPx, startPx, 90);
-    var point = L$1.point(newCoord.x, newCoord.y);
-
-    return map.containerPointToLatLng(point);
-  },
-
   _rotatePoint: function _rotatePoint(origin, point, angle) {
     var radians = angle * Math.PI / 180.0;
 
@@ -334,6 +320,29 @@ L$1.SwoopyArrow = L$1.Layer.extend({
       x: Math.cos(radians) * (point.x - origin.x) - Math.sin(radians) * (point.y - origin.y) + origin.x,
       y: Math.sin(radians) * (point.x - origin.x) + Math.cos(radians) * (point.y - origin.y) + origin.y
     };
+  },
+
+  _getControlPoint: function _getControlPoint(start, end, factor) {
+    var features = turf.featureCollection([turf.point([start.lat, start.lng]), turf.point([end.lat, end.lng])]);
+
+    var center$$1 = turf.center(features);
+
+    // get pixel coordinates for start, end and center
+    var startPx = map.latLngToContainerPoint(start);
+    var centerPx = map.latLngToContainerPoint(L$1.latLng(center$$1.geometry.coordinates[0], center$$1.geometry.coordinates[1]));
+    var rotatedPx = this._rotatePoint(centerPx, startPx, 90);
+
+    var distance = Math.sqrt(Math.pow(startPx.x - centerPx.x, 2) + Math.pow(startPx.y - centerPx.y, 2));
+    var angle = Math.atan2(rotatedPx.y - centerPx.y, rotatedPx.x - centerPx.x);
+
+    var offset = factor * distance - distance;
+
+    var sin = Math.sin(angle) * offset;
+    var cos = Math.cos(angle) * offset;
+
+    var controlPoint = L$1.point(rotatedPx.x + cos, rotatedPx.y + sin);
+
+    return map.containerPointToLatLng(controlPoint);
   },
 
   _createLabel: function _createLabel() {
