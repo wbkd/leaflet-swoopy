@@ -1,79 +1,192 @@
-
-const swoopyArrowHelper = require('./swoopyArrow').default;
-const TurfBezier = require('turf-bezier');
 const L = require('leaflet');
+const curve = require('leaflet-curve');
+const shortid = require('shortid');
+const turf = require('turf');
 
-const map = L.map('map').setView([52.52, 13.4], 13);
+const map = L.map('map', {
+  renderer: L.svg()
+}).setView([52.52, 13.4], 5);
 
 L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+  attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
 L.SwoopyArrow = L.Layer.extend({
   options: {
     fromLatlng: [],
     toLatlng: [],
+    htmlLabel: '',
+    color: 'black',
+    labelClass: '',
+    opacity: 1,
+    minZoom: 0,
+    maxZoom: 22
   },
 
-  initialize: function(options) {
+  initialize: function (options) {
     L.Util.setOptions(this, options);
 
+    this._currentPathVisible = true;
     this._fromLatlng = L.latLng(this.options.fromLatlng);
     this._toLatlng = L.latLng(this.options.toLatlng);
+    this._controlLatlng = L.latLng(this._getControlPoint(L.latLng(this.options.fromLatlng), L.latLng(this.options.toLatlng)));
+    this._htmlLabel = this.options.htmlLabel;
+    this._labelSize = this.options.labelSize;
+    this._color = this.options.color;
+    this._labelClass = this.options.labelClass;
+    this._opacity = this.options.opacity;
+    this._minZoom = this.options.minZoom;
+    this._maxZoom = this.options.maxZoom;
 
     this._initSVG();
   },
 
-  _initSVG: function() {
+  _initSVG: function () {
     this._svg = L.SVG.create('svg');
-    this._path = L.SVG.create('path');
+    this._currentId = shortid.generate();
 
-    L.DomUtil.addClass(this._svg, 'leaflet-swoopyarrow');
-    L.DomUtil.addClass(this._path, 'leaflet-swoopyarrow__path');
-
-    this._path.setAttribute('stroke', '#000');
-    this._path.setAttribute('fill', 'none');
-    this._path.setAttribute('marker-end', 'url(#arrowhead)');
-
-    this._svg.appendChild(this._path);
+    this._arrow = this._createArrow();
+    this._svg.appendChild(this._arrow);
   },
 
-  onAdd: function(map) {
+  onAdd: function (map) {
     this._map = map;
     this.getPane().appendChild(this._svg);
 
-    this.update();
-  },
+    this._drawSwoopyArrows();
 
-  _getSwoopyPath: function(map) {
-    return swoopyArrowHelper()
-      .angle(Math.PI/4)
-      .x(d => this._map.latLngToLayerPoint([d.lat, d.lng]).x)
-      .y(d => this._map.latLngToLayerPoint([d.lat, d.lng]).y);
+    this.update(this._map);
   },
 
   getEvents: function () {
-		return {
-			zoom: this.update,
-			viewreset: this.update
-		};
-	},
+    return {
+      zoom: this.update,
+      viewreset: this.update
+    };
+  },
 
-  update: function() {
-    const swoopyPath = this._getSwoopyPath()([this._fromLatlng,this._toLatlng]);
-    this._path.setAttribute('d', swoopyPath);
+  _drawSwoopyArrows: function() {
+    const swoopyPath = this._createPath();
+    this._currentPath = swoopyPath._path;
 
-    var pos = this._map.latLngToLayerPoint(this._fromLatlng).round();
+    const swoopyLabel = this._createLabel();
+    this._currentMarker = L.marker([this._fromLatlng.lat, this._fromLatlng.lng], { icon: swoopyLabel }).addTo( this._map);
+  },
 
-    console.log(pos)
+  _createArrow: function () {
+    this._container = this._container || L.SVG.create('defs');
+    const marker = L.SVG.create('marker');
+    const path = L.SVG.create('polyline');
 
-    const pathBBox = this._path.getBBox();
+    marker.setAttribute('id', `swoopyarrow__arrowhead${this._currentId}`);
+    L.DomUtil.addClass(marker, 'swoopyArrow__marker');
+    marker.setAttribute('markerWidth', '20');
+    marker.setAttribute('markerHeight', '20');
+    marker.setAttribute('viewBox', '-10 -10 20 20');
+    marker.setAttribute('orient', 'auto');
+    marker.setAttribute('refX', '0');
+    marker.setAttribute('refY', '0');
+    marker.setAttribute('fill', 'none');
+    marker.setAttribute('stroke', this._color);
+    marker.setAttribute('stroke-width', 1);
+    marker.setAttribute('opacity', this._opacity);
 
- //   L.DomUtil.setPosition(this._svg, L.point(pathBBox))
-    this._svg.setAttribute('width', window.innerWidth);
-    this._svg.setAttribute('height', window.innerHeight);
+    path.setAttribute('stroke-linejoin', 'bevel');
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', this._color);
+    path.setAttribute('points', '-6.75,-6.75 0,0 -6.75,6.75');
+
+    marker.appendChild(path);
+    this._container.appendChild(marker);
+
+    return this._container;
+  },
+
+  _createPath: function () {
+    const pathOne = L.curve(
+      [
+        'M', [this._fromLatlng.lat, this._fromLatlng.lng],
+        'Q', [this._controlLatlng.lat, this._controlLatlng.lng], [this._toLatlng.lat, this._toLatlng.lng]
+
+      ], {
+        animate: false,
+        color: this._color,
+        fill: false,
+        opacity: this._opacity,
+        weight: 1,
+        className: 'swoopyarrow__path'
+      }
+    ).addTo(map);
+
+    pathOne._path.setAttribute('id', `swoopyarrow__path${this._currentId}`);
+    pathOne._path.setAttribute('marker-end', `url(#swoopyarrow__arrowhead${this._currentId})`);
+
+    return pathOne;
+  },
+
+  _getControlPoint: function (start, end) {
+    const features = turf.featureCollection([
+      turf.point( [start.lat, start.lng]),
+      turf.point( [end.lat, end.lng])
+    ]);
+
+    const center = turf.center(features);
+
+    // get pixel coordinates for start, end and center
+    const startPx = map.latLngToContainerPoint(start);
+    const centerPx = map.latLngToContainerPoint(L.latLng(center.geometry.coordinates[0], center.geometry.coordinates[1]));
+
+    const newCoord = this._rotatePoint(centerPx, startPx, 90);
+    const point = L.point(newCoord.x, newCoord.y);
+
+    return map.containerPointToLatLng(point);
+  },
+
+  _rotatePoint: function (origin, point, angle) {
+    const radians = angle * Math.PI / 180.0;
+
+    return {
+      x: Math.cos(radians) * (point.x - origin.x) - Math.sin(radians) * (point.y - origin.y) + origin.x,
+      y: Math.sin(radians) * (point.x - origin.x) + Math.cos(radians) * (point.y - origin.y) + origin.y
+    };
+  },
+
+  _createLabel: function() {
+    return L.divIcon({
+      className: this._labelClass,
+      html: `<span id="marker-label${this._currentId}" style="font-size: ${this._map.getZoom() * this._labelSize}px">${this._htmlLabel}</span>`,
+      iconAnchor: [this._fromLatlng.lat, this._fromLatlng.lng],
+      iconSize: 'auto'
+    });
+  },
+
+  update: function (map) {
+    this._checkZoomLevel();
+
+    const arrowHead = this._svg.getElementById(`swoopyarrow__arrowhead${this._currentId}`);
+    arrowHead.setAttribute('markerWidth', `${2.5 * this._map.getZoom()}`);
+    arrowHead.setAttribute('markerHeight', `${2.5 * this._map.getZoom()}`);
+
+    const label = document.getElementById(`marker-label${this._currentId}`);
+    label.setAttribute('style', `font-size: ${this._map.getZoom() * 0.2 * this._labelSize}px;`);
 
     return this;
+  },
+
+  _checkZoomLevel: function() {
+    const currentZoomLevel = this._map.getZoom();
+
+    if(!this._currentPathVisible) {
+      this._currentPath.setAttribute('opacity', this._opacity);
+      this._currentMarker.setOpacity(this._opacity);
+    }
+
+    if(currentZoomLevel < this._minZoom || currentZoomLevel > this._maxZoom) {
+      this._currentPath.setAttribute('opacity', 0);
+      this._currentMarker.setOpacity(0);
+
+      this._currentPathVisible = false;
+    }
   }
 })
 
@@ -81,7 +194,21 @@ function swoopyArrow(options) {
   return new L.SwoopyArrow(options);
 }
 
- swoopyArrow({
-   fromLatlng: [52.52, 13.4],
-   toLatlng: [52.525, 14.405]
- }).addTo(map)
+swoopyArrow({
+  fromLatlng: [60.52, 1.4],
+  toLatlng: [52.52, 30.405],
+  htmlLabel: 'From A to B',
+  labelSize: 16,
+  color: 'red',
+  labelClass: 'my-custom-class',
+  opacity: .62,
+  minZoom: 2,
+  maxZoom: 10
+}).addTo(map)
+
+swoopyArrow({
+  fromLatlng: [53.52, 13.4],
+  toLatlng: [53.525, 14.405],
+  htmlLabel: 'From C to D',
+  labelSize: 12,
+}).addTo(map)
