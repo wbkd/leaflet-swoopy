@@ -1,19 +1,21 @@
 {
-  "name": "starterkit-webapp",
+  "name": "Leaflet.SwoopyArrow",
   "version": "0.1.0",
-  "description": "Lightweight starting point for a web app.",
-  "main": "index.html",
+  "description": "Swoopy Arrow plugin for Leaflet",
+  "main": "build/Leaflet.SwoopyArrow.js",
   "scripts": {
     "start": "rollup -c rollup.config.js -w",
-    "build": "NODE_ENV=production rollup -c rollup.config.js"
+    "build": "NODE_ENV=production rollup -c rollup.config.js",
+    "docs": "jsdoc -c jsdoc.json"
   },
-  "author": "webkid <info@webkid.io>",
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.9.0",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-es2015": "^6.9.0",
     "eslint": "^4.6.1",
+    "jsdoc": "^3.5.4",
+    "jsdoc-template": "git+https://github.com/braintree/jsdoc-template.git",
     "rollup": "^0.49.2",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-butternut": "^0.1.0",
