@@ -1,4 +1,5 @@
 import resolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
 import replace from 'rollup-plugin-replace';
 import babel from 'rollup-plugin-babel';
 import butternut from 'rollup-plugin-butternut';
@@ -17,18 +18,19 @@ export default {
   sourcemap: true,
   external: [
     'leaflet',
-    '@turf/helpers',
-    '@turf/center'
   ],
   globals: {
     'leaflet': 'L',
     '@turf/helpers': 'turf',
-    '@turf/center': 'turf'
+    '@turf/cernter': 'turfCenter'
   },
   plugins: [
     resolve(),
     replace({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+    }),
+    commonjs({
+      include: ['node_modules/@turf/**', 'node_modules/shortid/**']
     }),
     babel({
       presets: [
