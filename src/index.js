@@ -1,7 +1,7 @@
-const L = require('leaflet');
-const curve = require('leaflet-curve');
-const shortid = require('shortid');
-const turf = require('turf');
+import L from 'leaflet';
+import '@webk1d/leaflet-curve';
+import turf from '@turf/helpers';
+import turfCenter from '@turf/center';
 
 L.SwoopyArrow = L.Layer.extend({
   options: {
@@ -37,7 +37,7 @@ L.SwoopyArrow = L.Layer.extend({
 
   _initSVG: function () {
     this._svg = L.SVG.create('svg');
-    this._currentId = shortid.generate();
+    this._currentId = new Date().getUTCMilliseconds();
 
     this._arrow = this._createArrow();
     this._svg.appendChild(this._arrow);
@@ -134,7 +134,7 @@ L.SwoopyArrow = L.Layer.extend({
       turf.point( [end.lat, end.lng])
     ]);
 
-    const center = turf.center(features);
+    const center = turfCenter(features);
 
     // get pixel coordinates for start, end and center
     const startPx = map.latLngToContainerPoint(start);
