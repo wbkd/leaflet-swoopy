@@ -4,8 +4,11 @@
   "description": "Swoopy Arrow plugin for Leaflet",
   "main": "build/Leaflet.SwoopyArrow.js",
   "scripts": {
-    "start": "rollup -c rollup.config.js -w",
-    "build": "NODE_ENV=production rollup -c rollup.config.js",
+    "start": "rollup -c -w",
+    "clean": "rimraf build/",
+    "prebuild": "npm run clean",
+    "build": "NODE_ENV=production rollup -c",
+    "postbuild": "NODE_ENV=production rollup -c rollup.config.prod.js",
     "docs": "jsdoc -c jsdoc.json"
   },
   "license": "MIT",
@@ -16,6 +19,7 @@
     "eslint": "^4.6.1",
     "jsdoc": "^3.5.4",
     "jsdoc-template": "git+https://github.com/braintree/jsdoc-template.git",
+    "rimraf": "^2.6.1",
     "rollup": "^0.49.2",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-butternut": "^0.1.0",
