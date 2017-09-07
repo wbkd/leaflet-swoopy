@@ -1,5 +1,5 @@
 import L from 'leaflet';
-import 'leaflet-curve';
+import '@webk1d/leaflet-curve';
 import turf from '@turf/helpers';
 import turfCenter from '@turf/center';
 
