@@ -1,3 +1,4 @@
+(function(l, i, v, e) { v = l.createElement(i); v.async = 1; v.src = '//' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; e = l.getElementsByTagName(i)[0]; e.parentNode.insertBefore(v, e)})(document, 'script');
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('leaflet')) :
 	typeof define === 'function' && define.amd ? define(['leaflet'], factory) :
@@ -1627,17 +1628,24 @@ var center = function (geojson, properties) {
     return point$1([x, y], properties);
 };
 
+var id = 0;
+
 L$1.SwoopyArrow = L$1.Layer.extend({
   options: {
     fromLatlng: [],
     toLatlng: [],
     htmlLabel: '',
     color: 'black',
-    labelClass: '',
+    labelClassName: '',
     opacity: 1,
     minZoom: 0,
     maxZoom: 22,
-    factor: 0
+    factor: 0,
+    fontSize: 12,
+    iconAnchor: [0, 0],
+    iconSize: [50, 20],
+    weight: 1,
+    arrowFilled: false
   },
 
   initialize: function initialize(options) {
@@ -1649,20 +1657,23 @@ L$1.SwoopyArrow = L$1.Layer.extend({
     this._factor = this.options.factor;
     this._controlLatlng = L$1.latLng(this._getControlPoint(L$1.latLng(this.options.fromLatlng), L$1.latLng(this.options.toLatlng), this.options.factor));
     this._htmlLabel = this.options.htmlLabel;
-    this._labelSize = this.options.labelSize;
+    this._fontSize = this.options.fontSize;
     this._color = this.options.color;
-    this._labelClass = this.options.labelClass;
+    this._labelClassName = this.options.labelClassName;
     this._opacity = this.options.opacity;
     this._minZoom = this.options.minZoom;
     this._maxZoom = this.options.maxZoom;
+    this._iconAnchor = this.options.iconAnchor;
+    this._iconSize = this.options.iconSize;
+    this._weight = this.options.weight;
+    this._arrowFilled = this.options.arrowFilled;
 
     this._initSVG();
   },
 
   _initSVG: function _initSVG() {
     this._svg = L$1.SVG.create('svg');
-    this._currentId = new Date().getUTCMilliseconds();
-
+    this._currentId = id++;
     this._arrow = this._createArrow();
     this._svg.appendChild(this._arrow);
   },
@@ -1696,8 +1707,8 @@ L$1.SwoopyArrow = L$1.Layer.extend({
     var marker = L$1.SVG.create('marker');
     var path = L$1.SVG.create('polyline');
 
+    marker.classList.add('swoopyArrow__marker');
     marker.setAttribute('id', 'swoopyarrow__arrowhead' + this._currentId);
-    L$1.DomUtil.addClass(marker, 'swoopyArrow__marker');
     marker.setAttribute('markerWidth', '20');
     marker.setAttribute('markerHeight', '20');
     marker.setAttribute('viewBox', '-10 -10 20 20');
@@ -1706,11 +1717,11 @@ L$1.SwoopyArrow = L$1.Layer.extend({
     marker.setAttribute('refY', '0');
     marker.setAttribute('fill', 'none');
     marker.setAttribute('stroke', this._color);
-    marker.setAttribute('stroke-width', 1);
+    marker.setAttribute('stroke-width', this._weight);
     marker.setAttribute('opacity', this._opacity);
 
     path.setAttribute('stroke-linejoin', 'bevel');
-    path.setAttribute('fill', 'none');
+    path.setAttribute('fill', this._arrowFilled ? this._color : false);
     path.setAttribute('stroke', this._color);
     path.setAttribute('points', '-6.75,-6.75 0,0 -6.75,6.75');
 
@@ -1726,7 +1737,7 @@ L$1.SwoopyArrow = L$1.Layer.extend({
       color: this._color,
       fill: false,
       opacity: this._opacity,
-      weight: 1,
+      weight: this._weight,
       className: 'swoopyarrow__path'
     }).addTo(map);
 
@@ -1770,10 +1781,10 @@ L$1.SwoopyArrow = L$1.Layer.extend({
 
   _createLabel: function _createLabel() {
     return L$1.divIcon({
-      className: this._labelClass,
-      html: '<span id="marker-label' + this._currentId + '" style="font-size: ' + this._map.getZoom() * this._labelSize + 'px">' + this._htmlLabel + '</span>',
-      iconAnchor: [this._fromLatlng.lat, this._fromLatlng.lng],
-      iconSize: 'auto'
+      className: this._labelClassName,
+      html: '<span id="marker-label' + this._currentId + '" style="font-size: ' + this._fontSize + 'px">' + this._htmlLabel + '</span>',
+      iconAnchor: this._iconAnchor,
+      iconSize: this._iconSize
     });
   },
 
@@ -1783,9 +1794,6 @@ L$1.SwoopyArrow = L$1.Layer.extend({
     var arrowHead = this._svg.getElementById('swoopyarrow__arrowhead' + this._currentId);
     arrowHead.setAttribute('markerWidth', '' + 2.5 * this._map.getZoom());
     arrowHead.setAttribute('markerHeight', '' + 2.5 * this._map.getZoom());
-
-    var label = document.getElementById('marker-label' + this._currentId);
-    label.setAttribute('style', 'font-size: ' + this._map.getZoom() * 0.2 * this._labelSize + 'px;');
 
     return this;
   },

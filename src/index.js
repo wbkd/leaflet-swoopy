@@ -3,17 +3,24 @@ import '@webk1d/leaflet-curve';
 import turf from '@turf/helpers';
 import turfCenter from '@turf/center';
 
+let id = 0;
+
 L.SwoopyArrow = L.Layer.extend({
   options: {
     fromLatlng: [],
     toLatlng: [],
     htmlLabel: '',
     color: 'black',
-    labelClass: '',
+    labelClassName: '',
     opacity: 1,
     minZoom: 0,
     maxZoom: 22,
-    factor: 0
+    factor: 0,
+    fontSize: 12,
+    iconAnchor: [0, 0],
+    iconSize: [50, 20],
+    weight: 1,
+    arrowFilled: false
   },
 
   initialize: function (options) {
@@ -25,20 +32,23 @@ L.SwoopyArrow = L.Layer.extend({
     this._factor = this.options.factor;
     this._controlLatlng = L.latLng(this._getControlPoint(L.latLng(this.options.fromLatlng), L.latLng(this.options.toLatlng), this.options.factor));
     this._htmlLabel = this.options.htmlLabel;
-    this._labelSize = this.options.labelSize;
+    this._fontSize = this.options.fontSize;
     this._color = this.options.color;
-    this._labelClass = this.options.labelClass;
+    this._labelClassName = this.options.labelClassName;
     this._opacity = this.options.opacity;
     this._minZoom = this.options.minZoom;
     this._maxZoom = this.options.maxZoom;
+    this._iconAnchor = this.options.iconAnchor;
+    this._iconSize = this.options.iconSize;
+    this._weight = this.options.weight;
+    this._arrowFilled = this.options.arrowFilled;
 
     this._initSVG();
   },
 
   _initSVG: function () {
     this._svg = L.SVG.create('svg');
-    this._currentId = new Date().getUTCMilliseconds();
-
+    this._currentId = id++;
     this._arrow = this._createArrow();
     this._svg.appendChild(this._arrow);
   },
@@ -72,8 +82,8 @@ L.SwoopyArrow = L.Layer.extend({
     const marker = L.SVG.create('marker');
     const path = L.SVG.create('polyline');
 
+    marker.classList.add('swoopyArrow__marker');
     marker.setAttribute('id', `swoopyarrow__arrowhead${this._currentId}`);
-    L.DomUtil.addClass(marker, 'swoopyArrow__marker');
     marker.setAttribute('markerWidth', '20');
     marker.setAttribute('markerHeight', '20');
     marker.setAttribute('viewBox', '-10 -10 20 20');
@@ -82,11 +92,11 @@ L.SwoopyArrow = L.Layer.extend({
     marker.setAttribute('refY', '0');
     marker.setAttribute('fill', 'none');
     marker.setAttribute('stroke', this._color);
-    marker.setAttribute('stroke-width', 1);
+    marker.setAttribute('stroke-width', this._weight);
     marker.setAttribute('opacity', this._opacity);
 
     path.setAttribute('stroke-linejoin', 'bevel');
-    path.setAttribute('fill', 'none');
+    path.setAttribute('fill', this._arrowFilled ? this._color : false);
     path.setAttribute('stroke', this._color);
     path.setAttribute('points', '-6.75,-6.75 0,0 -6.75,6.75');
 
@@ -97,17 +107,15 @@ L.SwoopyArrow = L.Layer.extend({
   },
 
   _createPath: function () {
-    const pathOne = L.curve(
-      [
-        'M', [this._fromLatlng.lat, this._fromLatlng.lng],
-        'Q', [this._controlLatlng.lat, this._controlLatlng.lng], [this._toLatlng.lat, this._toLatlng.lng]
-
+    const pathOne = L.curve([
+      'M', [this._fromLatlng.lat, this._fromLatlng.lng],
+      'Q', [this._controlLatlng.lat, this._controlLatlng.lng], [this._toLatlng.lat, this._toLatlng.lng]
       ], {
         animate: false,
         color: this._color,
         fill: false,
         opacity: this._opacity,
-        weight: 1,
+        weight: this._weight,
         className: 'swoopyarrow__path'
       }
     ).addTo(map);
@@ -158,10 +166,10 @@ L.SwoopyArrow = L.Layer.extend({
 
   _createLabel: function() {
     return L.divIcon({
-      className: this._labelClass,
-      html: `<span id="marker-label${this._currentId}" style="font-size: ${this._map.getZoom() * this._labelSize}px">${this._htmlLabel}</span>`,
-      iconAnchor: [this._fromLatlng.lat, this._fromLatlng.lng],
-      iconSize: 'auto'
+      className: this._labelClassName,
+      html: `<span id="marker-label${this._currentId}" style="font-size: ${this._fontSize}px">${this._htmlLabel}</span>`,
+      iconAnchor: this._iconAnchor,
+      iconSize: this._iconSize
     });
   },
 
@@ -171,9 +179,6 @@ L.SwoopyArrow = L.Layer.extend({
     const arrowHead = this._svg.getElementById(`swoopyarrow__arrowhead${this._currentId}`);
     arrowHead.setAttribute('markerWidth', `${2.5 * this._map.getZoom()}`);
     arrowHead.setAttribute('markerHeight', `${2.5 * this._map.getZoom()}`);
-
-    const label = document.getElementById(`marker-label${this._currentId}`);
-    label.setAttribute('style', `font-size: ${this._map.getZoom() * 0.2 * this._labelSize}px;`);
 
     return this;
   },
