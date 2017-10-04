@@ -8,8 +8,7 @@
     "clean": "rimraf build/",
     "prebuild": "npm run clean",
     "build": "NODE_ENV=production rollup -c",
-    "postbuild": "NODE_ENV=production rollup -c rollup.config.prod.js",
-    "docs": "jsdoc -c jsdoc.json"
+    "postbuild": "NODE_ENV=production rollup -c rollup.config.prod.js"
   },
   "license": "MIT",
   "devDependencies": {
@@ -18,8 +17,6 @@
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-es2015": "^6.9.0",
     "eslint": "^4.6.1",
-    "jsdoc": "^3.5.4",
-    "jsdoc-template": "git+https://github.com/braintree/jsdoc-template.git",
     "rimraf": "^2.6.1",
     "rollup": "^0.49.2",
     "rollup-plugin-babel": "^3.0.2",
