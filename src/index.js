@@ -198,4 +198,6 @@ L.SwoopyArrow = L.Layer.extend({
       this._currentPathVisible = false;
     }
   }
-})
+});
+
+L.swoopyArrow = (fromLatlng, toLatlng, options) => new L.SwoopyArrow(fromLatlng, toLatlng, options);
