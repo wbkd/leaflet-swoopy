@@ -39,11 +39,11 @@ export default {
       exclude: 'node_modules/**'
     }),
     !isProd && livereload({
-      watch: ['examples', 'build']
+      watch: ['docs', 'build']
     }),
     !isProd && serve({
       port: 3000,
-      contentBase: ['examples', 'build']
+      contentBase: ['docs', 'build']
     })
   ]
 };
