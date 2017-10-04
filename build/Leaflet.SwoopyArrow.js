@@ -1631,9 +1631,9 @@ var center = function (geojson, properties) {
 var id = 0;
 
 L$1.SwoopyArrow = L$1.Layer.extend({
+  fromLatlng: [],
+  toLatlng: [],
   options: {
-    fromLatlng: [],
-    toLatlng: [],
     htmlLabel: '',
     color: 'black',
     labelClassName: '',
@@ -1648,14 +1648,14 @@ L$1.SwoopyArrow = L$1.Layer.extend({
     arrowFilled: false
   },
 
-  initialize: function initialize(options) {
+  initialize: function initialize(fromLatlng, toLatlng, options) {
     L$1.Util.setOptions(this, options);
 
     this._currentPathVisible = true;
-    this._fromLatlng = L$1.latLng(this.options.fromLatlng);
-    this._toLatlng = L$1.latLng(this.options.toLatlng);
+    this._fromLatlng = L$1.latLng(fromLatlng);
+    this._toLatlng = L$1.latLng(toLatlng);
     this._factor = this.options.factor;
-    this._controlLatlng = L$1.latLng(this._getControlPoint(L$1.latLng(this.options.fromLatlng), L$1.latLng(this.options.toLatlng), this.options.factor));
+    this._controlLatlng = L$1.latLng(this._getControlPoint(L$1.latLng(fromLatlng), L$1.latLng(toLatlng), this.options.factor));
     this._htmlLabel = this.options.htmlLabel;
     this._fontSize = this.options.fontSize;
     this._color = this.options.color;

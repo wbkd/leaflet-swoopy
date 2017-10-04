@@ -6,9 +6,9 @@ import turfCenter from '@turf/center';
 let id = 0;
 
 L.SwoopyArrow = L.Layer.extend({
+  fromLatlng: [],
+  toLatlng: [],
   options: {
-    fromLatlng: [],
-    toLatlng: [],
     htmlLabel: '',
     color: 'black',
     labelClassName: '',
@@ -23,14 +23,14 @@ L.SwoopyArrow = L.Layer.extend({
     arrowFilled: false
   },
 
-  initialize: function (options) {
+  initialize: function (fromLatlng, toLatlng, options) {
     L.Util.setOptions(this, options);
 
     this._currentPathVisible = true;
-    this._fromLatlng = L.latLng(this.options.fromLatlng);
-    this._toLatlng = L.latLng(this.options.toLatlng);
+    this._fromLatlng = L.latLng(fromLatlng);
+    this._toLatlng = L.latLng(toLatlng);
     this._factor = this.options.factor;
-    this._controlLatlng = L.latLng(this._getControlPoint(L.latLng(this.options.fromLatlng), L.latLng(this.options.toLatlng), this.options.factor));
+    this._controlLatlng = L.latLng(this._getControlPoint(L.latLng(fromLatlng), L.latLng(toLatlng), this.options.factor));
     this._htmlLabel = this.options.htmlLabel;
     this._fontSize = this.options.fontSize;
     this._color = this.options.color;
