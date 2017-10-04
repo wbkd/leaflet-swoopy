@@ -31,7 +31,6 @@
     "@turf/center": "^4.6.1",
     "@turf/helpers": "^4.6.0",
     "@webk1d/leaflet-curve": "^1.0.0",
-    "leaflet": "^1.1.0",
-    "shortid": "^2.2.8"
+    "leaflet": "^1.1.0"
   }
 }
