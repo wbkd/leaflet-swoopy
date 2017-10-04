@@ -1815,5 +1815,9 @@ L$1.SwoopyArrow = L$1.Layer.extend({
   }
 });
 
+L$1.swoopyArrow = function (fromLatlng, toLatlng, options) {
+  return new L$1.SwoopyArrow(fromLatlng, toLatlng, options);
+};
+
 })));
 //# sourceMappingURL=Leaflet.SwoopyArrow.js.map
