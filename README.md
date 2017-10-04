@@ -26,11 +26,3 @@ In order to build a minified production-ready version of the code, run:
 ```
 $ npm run build
 ```
-
-## Docs
-
-The documentation is located in `/docs` and built using JSDoc. You can update the docs running:
-
-```
-$ npm run docs
-```
