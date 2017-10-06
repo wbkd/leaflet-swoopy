@@ -96,7 +96,7 @@ L.SwoopyArrow = L.Layer.extend({
     marker.setAttribute('opacity', this._opacity);
 
     path.setAttribute('stroke-linejoin', 'bevel');
-    path.setAttribute('fill', this._arrowFilled ? this._color : false);
+    path.setAttribute('fill', this._arrowFilled ? this._color : 'none');
     path.setAttribute('stroke', this._color);
     path.setAttribute('points', '-6.75,-6.75 0,0 -6.75,6.75');
 
