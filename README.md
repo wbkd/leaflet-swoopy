@@ -1,28 +1,26 @@
-# Leaflet SwoopyArrow
+# Leaflet Swoopy Arrow Plugin
+
+You can find the docs on the plugin [website](https://wbkd.github.io/leaflet-swoopy/).
 
 ## Installation
 
 Install all dependencies running:
 
-```
-$ npm install
-```
-
-
-## Development
-
-To build the application and start a webserver with livereload, run:
-
-```
-$ npm start
+```shell
+$ npm install leaflet-swoopy
 ```
 
-Then open your browser at [http://localhost:3000/](http://localhost:3000/)
+## Usage
 
-## Build
+```javascript
+import 'leaflet-swoopy';
 
-In order to build a minified production-ready version of the code, run:
+// create leaflet map ...
 
-```
-$ npm run build
+const swoopy = L.swoopyArrow([53.52, 13.4], [53.525, 14.41], {
+  annotation: 'Hi!',
+  fontSize: 12,
+  iconAnchor: [20, 10],
+  iconSize: [20, 16]
+}).addTo(map);
 ```
