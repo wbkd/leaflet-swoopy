@@ -1731,7 +1731,7 @@ L$1.SwoopyArrow = L$1.Layer.extend({
   },
 
   _createPath: function _createPath() {
-    var controlLatlng = this._getControlPoint(L$1.latLng(fromLatlng), L$1.latLng(toLatlng), this.options.factor);
+    var controlLatlng = this._getControlPoint(L$1.latLng(this._fromLatlng), L$1.latLng(this._toLatlng), this.options.factor);
     var pathOne = L$1.curve(['M', [this._fromLatlng.lat, this._fromLatlng.lng], 'Q', [controlLatlng.lat, controlLatlng.lng], [this._toLatlng.lat, this._toLatlng.lng]], {
       animate: false,
       color: this._color,
@@ -1739,7 +1739,7 @@ L$1.SwoopyArrow = L$1.Layer.extend({
       opacity: this._opacity,
       weight: this._weight,
       className: 'swoopyarrow__path'
-    }).addTo(map);
+    }).addTo(this._map);
 
     pathOne._path.setAttribute('id', 'swoopyarrow__path' + this._currentId);
     pathOne._path.setAttribute('marker-end', 'url(#swoopyarrow__arrowhead' + this._currentId + ')');

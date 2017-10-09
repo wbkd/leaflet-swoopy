@@ -74,7 +74,7 @@ L.SwoopyArrow = L.Layer.extend({
     this._currentPath = swoopyPath._path;
 
     const swoopyLabel = this._createLabel();
-    this._currentMarker = L.marker([this._fromLatlng.lat, this._fromLatlng.lng], { icon: swoopyLabel }).addTo( this._map);
+    this._currentMarker = L.marker([this._fromLatlng.lat, this._fromLatlng.lng], { icon: swoopyLabel }).addTo(this._map);
   },
 
   _createArrow: function () {
@@ -107,7 +107,7 @@ L.SwoopyArrow = L.Layer.extend({
   },
 
   _createPath: function () {
-    const controlLatlng = this._getControlPoint(L.latLng(fromLatlng), L.latLng(toLatlng), this.options.factor);
+    const controlLatlng = this._getControlPoint(L.latLng(this._fromLatlng), L.latLng(this._toLatlng), this.options.factor);
     const pathOne = L.curve([
       'M', [this._fromLatlng.lat, this._fromLatlng.lng],
       'Q', [controlLatlng.lat, controlLatlng.lng], [this._toLatlng.lat, this._toLatlng.lng]
@@ -119,7 +119,7 @@ L.SwoopyArrow = L.Layer.extend({
         weight: this._weight,
         className: 'swoopyarrow__path'
       }
-    ).addTo(map);
+    ).addTo(this._map);
 
     pathOne._path.setAttribute('id', `swoopyarrow__path${this._currentId}`);
     pathOne._path.setAttribute('marker-end', `url(#swoopyarrow__arrowhead${this._currentId})`);
