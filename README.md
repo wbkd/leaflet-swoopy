@@ -16,6 +16,7 @@ $ npm install leaflet-swoopy
 ## Usage
 
 ```javascript
+import L from 'leaflet';
 import 'leaflet-swoopy';
 
 // create leaflet map ...

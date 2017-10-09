@@ -1655,7 +1655,6 @@ L$1.SwoopyArrow = L$1.Layer.extend({
     this._fromLatlng = L$1.latLng(fromLatlng);
     this._toLatlng = L$1.latLng(toLatlng);
     this._factor = this.options.factor;
-    this._controlLatlng = L$1.latLng(this._getControlPoint(L$1.latLng(fromLatlng), L$1.latLng(toLatlng), this.options.factor));
     this._text = this.options.text;
     this._fontSize = this.options.fontSize;
     this._color = this.options.color;
@@ -1732,7 +1731,8 @@ L$1.SwoopyArrow = L$1.Layer.extend({
   },
 
   _createPath: function _createPath() {
-    var pathOne = L$1.curve(['M', [this._fromLatlng.lat, this._fromLatlng.lng], 'Q', [this._controlLatlng.lat, this._controlLatlng.lng], [this._toLatlng.lat, this._toLatlng.lng]], {
+    var controlLatlng = this._getControlPoint(L$1.latLng(fromLatlng), L$1.latLng(toLatlng), this.options.factor);
+    var pathOne = L$1.curve(['M', [this._fromLatlng.lat, this._fromLatlng.lng], 'Q', [controlLatlng.lat, controlLatlng.lng], [this._toLatlng.lat, this._toLatlng.lng]], {
       animate: false,
       color: this._color,
       fill: false,
@@ -1762,13 +1762,12 @@ L$1.SwoopyArrow = L$1.Layer.extend({
     var center$$1 = center(features);
 
     // get pixel coordinates for start, end and center
-    var startPx = map.latLngToContainerPoint(start);
-    var centerPx = map.latLngToContainerPoint(L$1.latLng(center$$1.geometry.coordinates[0], center$$1.geometry.coordinates[1]));
+    var startPx = this._map.latLngToContainerPoint(start);
+    var centerPx = this._map.latLngToContainerPoint(L$1.latLng(center$$1.geometry.coordinates[0], center$$1.geometry.coordinates[1]));
     var rotatedPx = this._rotatePoint(centerPx, startPx, 90);
 
     var distance = Math.sqrt(Math.pow(startPx.x - centerPx.x, 2) + Math.pow(startPx.y - centerPx.y, 2));
     var angle = Math.atan2(rotatedPx.y - centerPx.y, rotatedPx.x - centerPx.x);
-
     var offset = factor * distance - distance;
 
     var sin = Math.sin(angle) * offset;
@@ -1776,7 +1775,7 @@ L$1.SwoopyArrow = L$1.Layer.extend({
 
     var controlPoint = L$1.point(rotatedPx.x + cos, rotatedPx.y + sin);
 
-    return map.containerPointToLatLng(controlPoint);
+    return this._map.containerPointToLatLng(controlPoint);
   },
 
   _createLabel: function _createLabel() {

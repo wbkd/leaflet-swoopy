@@ -31,7 +31,6 @@ L.SwoopyArrow = L.Layer.extend({
     this._fromLatlng = L.latLng(fromLatlng);
     this._toLatlng = L.latLng(toLatlng);
     this._factor = this.options.factor;
-    this._controlLatlng = L.latLng(this._getControlPoint(L.latLng(fromLatlng), L.latLng(toLatlng), this.options.factor));
     this._text = this.options.text;
     this._fontSize = this.options.fontSize;
     this._color = this.options.color;
@@ -108,9 +107,10 @@ L.SwoopyArrow = L.Layer.extend({
   },
 
   _createPath: function () {
+    const controlLatlng = this._getControlPoint(L.latLng(fromLatlng), L.latLng(toLatlng), this.options.factor);
     const pathOne = L.curve([
       'M', [this._fromLatlng.lat, this._fromLatlng.lng],
-      'Q', [this._controlLatlng.lat, this._controlLatlng.lng], [this._toLatlng.lat, this._toLatlng.lng]
+      'Q', [controlLatlng.lat, controlLatlng.lng], [this._toLatlng.lat, this._toLatlng.lng]
       ], {
         animate: false,
         color: this._color,
@@ -139,22 +139,19 @@ L.SwoopyArrow = L.Layer.extend({
 
   _getControlPoint: function (start, end, factor) {
     const features = turf.featureCollection([
-      turf.point( [start.lat, start.lng]),
-      turf.point( [end.lat, end.lng])
+      turf.point([start.lat, start.lng]),
+      turf.point([end.lat, end.lng])
     ]);
 
     const center = turfCenter(features);
 
     // get pixel coordinates for start, end and center
-    const startPx = map.latLngToContainerPoint(start);
-    const centerPx = map.latLngToContainerPoint(L.latLng(center.geometry.coordinates[0], center.geometry.coordinates[1]));
+    const startPx = this._map.latLngToContainerPoint(start);
+    const centerPx = this._map.latLngToContainerPoint(L.latLng(center.geometry.coordinates[0], center.geometry.coordinates[1]));
     const rotatedPx = this._rotatePoint(centerPx, startPx, 90);
-
 
     const distance = Math.sqrt(Math.pow(startPx.x - centerPx.x, 2) + Math.pow(startPx.y - centerPx.y, 2));
     const angle = Math.atan2(rotatedPx.y - centerPx.y, rotatedPx.x - centerPx.x);
-
-
     const offset = (factor * distance) - distance;
 
     const sin = Math.sin(angle) * offset;
@@ -162,7 +159,7 @@ L.SwoopyArrow = L.Layer.extend({
 
     const controlPoint = L.point(rotatedPx.x + cos, rotatedPx.y + sin);
 
-    return map.containerPointToLatLng(controlPoint);
+    return this._map.containerPointToLatLng(controlPoint);
   },
 
   _createLabel: function() {
@@ -174,7 +171,7 @@ L.SwoopyArrow = L.Layer.extend({
     });
   },
 
-  update: function (map) {
+  update: function(map) {
     this._checkZoomLevel();
 
     const arrowHead = this._svg.getElementById(`swoopyarrow__arrowhead${this._currentId}`);
