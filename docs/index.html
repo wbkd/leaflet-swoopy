@@ -8,11 +8,17 @@
 
   <title>Leaflet Swoopy</title>
 
-  <link rel="stylesheet" href="https://unpkg.com/normalize.css/normalize.css">
+  <link href="https://unpkg.com/normalize.css/normalize.css" rel="stylesheet" >
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/solarized-light.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">  
+  <link href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" rel="stylesheet" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin=""></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/javascript.min.js"></script>
   <script src="Leaflet.SwoopyArrow.js"></script>
+
+  <script>hljs.initHighlightingOnLoad();</script>
 
   <style>
   html,
@@ -23,12 +29,106 @@
 
   html {
     font-family: 'Roboto', sans-serif;
+    color: #212121;
+    background: #fefefc;
+    line-height: 1.4;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  table th {
+    text-align: left;
+    padding: 0 .75em
+  }
+
+  thead {
+    border-bottom: 1px solid #D4D4D4;
+  }
+
+  thead div {
+    padding-bottom: .75em;
+  }
+
+  tbody tr:nth-child(even) {
+    background: #FDF9F7
+  }
+
+  td {
+    padding: 1em .7em;
+  }
+
+  a {
+    color: #64A7D9;
+    text-decoration: none;
+  }
+
+  pre {
+    margin: 0;
+  }
+
+  code, .code {
+    font-size: 15px;
+    font-family: "Roboto Mono";
+  }
+
+  .code.option {
+    color: #64A7D9;
+  }
+
+  .hljs {
+    background: none;
+    padding: 0;
+    overflow-x: visible;
+    line-height: 1.3;
+    color: #64A7D9;
+  }
+
+  .hljs.shell {
+    color: #676788;
+  }
+
+  .hljs-number {
+    color: #D6428D;
+  }
+
+  .hljs-attr {
+    color: #676788;
+  }
+
+  h1, h2, h3 {
+    font-weight: 300;
+    margin: 0;
+  }
+
+  header {
+    text-align: center;
+    margin: 3em 0 2em 0;
+  }
+
+  .toparrow {
+    display: none;
+  }
+
+  .subtitle {
+    color: #454545;
+    margin-top: .5em;
+    font-size: 1.2em
+  }
+
+  .sectiontitle {
+    margin: 2em 0 1em 0;
+    font-size: 1.2em;
   }
 
   .centered {
-    max-width: 1000px;
-    width: 1000px;
+    width: 100%;
     margin: 0 auto;
+    max-width: 1000px;
+    padding: 0 12px;
+    box-sizing: border-box;
   }
 
   .bg {
@@ -37,19 +137,38 @@
     background: #FDF9F7;
   }
 
-  .title {
-    text-align: center;
-    margin: 3em 0 2em 0;
+  .map-wrapper {
+    position: relative;
   }
 
-  .title h1, .title h2 {
-    font-weight: 300;
+  .activate-btn {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index:1000;
+    background: #FDF9F7;
+    padding: .5em 1em;
+    font-family: 'Roboto', sans-serif;
+    border: none;
+    border-radius: 1px;
+    font-size: 13px;
+    box-shadow: 0 0 1px 2px rgba(0, 0, 0, .12);
+    font-weight: 700;
+    color: #676788;
+    cursor: pointer;
+    opacity: .5;
+    transition: .35s opacity;
+  }
+
+  .activate-btn:hover {
+    opacity: .8;
+    box-shadow: 0 0 4px 3px rgba(0, 0, 0, .15);
   }
 
   #map {
     width: 100%;
-    height: 400px;
-    box-shadow: 0 2px 3px 1px rgba(0, 0, 0, .15);
+    height: 200px;
+    box-shadow: 0 2px 12px 2px rgba(0, 0, 0, .15);
   }
 
   .swoopy-arrow {
@@ -61,67 +180,154 @@
   .swoopyarrow__label {
     font-size: 13px;
   }
+
+  footer {
+    padding:4em 0 3em 0;
+    position: relative;
+  }
+
+  .footerarrow {
+    position: absolute;
+    left: -10px;
+    transform: translate(-100%, 10px) rotate(-90deg);
+  }
+
+  @media screen and (min-width: 768px) {
+    header {
+      margin: 6em 0 6em 0;
+      position: relative
+    }
+
+    .title {
+      font-size: 2.8em;
+    }
+
+    .subtitle {
+      margin-top: .3em;
+      font-size: 1.2em
+    }
+
+    .sectiontitle {
+      font-size: 1.5em;
+      margin:4em 0 1.2em 0;
+    }
+
+    #map {
+      height: 450px;
+    }
+
+    footer {
+      padding:8em 0 70px 0
+    }
+  }
+
+  @media screen and (min-width: 1000px) {
+    .toparrow {
+      position: absolute;
+      right: 110px;
+      top: 80px;
+      display: block;
+    }
+  }
+
+
   </style>
 </head>
 <body>
   <div id="docs">
 
     <div class="centered">
-      <div class="title">
-        <h1>Leaflet Swoopy</h1>
-        <h2>A plugin for adding beautiful swoopy arrows on top of Leaflet maps</h2>
-      </div>
+      <header>
+        <h1 class="title">Leaflet Swoopy</h1>
+        <h2 class="subtitle">A plugin for adding beautiful swoopy arrows on top of Leaflet maps</h2>
+        <!-- <img class="toparrow" src="arrow.svg"> -->
+      </header>
 
-      <div id="map"></div>
+      <div class="map-wrapper">
+        <div id="map"></div>
+        <button class="activate-btn">Activate Map</button>
+      </div>
 
     </div>
 
     <div class="centered">
-      <h3>Installation</h3>
+      <h3 class="sectiontitle">Installation</h3>
     </div>
 
     <div class="bg">
       <div class="centered">
-        <pre>npm install leaflet-swoopy</pre>
+        <pre><code class="shell">npm install leaflet-swoopy</code></pre>
       </div>
     </div>
 
     <div class="centered">
-      <h3>Usage Example</h3>
+      <h3 class="sectiontitle">Usage Example</h3>
     </div>
 
     <div class="bg">
       <div class="centered">
-        <pre>
-new L.SwoopyArrow([53.52, 13.4], [53.525, 14.405], {
-  htmlLabel: 'Yo',
+        <pre><code class="javascript">import 'leaflet-swoopy';
+
+// create leaflet map ...
+
+const swoopy = L.swoopyArrow([53.52, 13.4], [53.525, 14.41], {
+  annotation: 'Hi!',
   fontSize: 12,
   iconAnchor: [20, 10],
   iconSize: [20, 16]
-}).addTo(map);
-        </pre>
+}).addTo(map);</code></pre>
       </div>
     </div>
 
     <div class="centered">
+      <h3 class="sectiontitle">Creation</h3>
       <table>
-        <tr>
-          <th>Option</th>
-          <th>Type</th>
-          <th>Default</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td><pre>htmlLabel</pre></td>
-          <td><pre>String</pre></td>
-          <td><pre>null</pre></td>
-          <td>Text label at the fromLngLat position</td>          
-        </tr>
+          <colgroup>
+            <col width="60%">
+            <col width="">
+          </colgroup>
+        <thead>
+          <tr>
+            <th><div>Factory</div></th>
+            <th><div>Description</div></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="code">
+                L.swoopyArrow(&lt;LatLng[]&gt; fromLatlng, &lt;LatLng[]&gt; toLatlng, &lt;SwoopyOptions&gt; options?)
+            </td>
+            <td>You to pass to the first paramters fromLatlng and toLatlng in order to create a swoopy arrow. The options paramter is optional.</td>
+          </tr>
+        </tbody>
       </table>
-    
-    <div id="footer">
-      made by <a href="webkid.io">webkid.io</a>
+
     </div>
+
+    <div class="centered">
+      <h3 class="sectiontitle">Options</h3>
+      <table>
+        <colgroup>
+          <col width="15%">
+          <col width="15%">
+          <col width="10%">
+          <col width="60%">
+        </colgroup>
+        <thead>
+          <tr>
+            <th><div>Option</div></th>
+            <th><div>Type</div></th>
+            <th><div>Default</div></th>
+            <th><div>Description</div></th>
+          </tr>
+        </thead>
+        <tbody id="tbody-options"></tbody>
+      </table>
+
+    <footer>
+      <img class="footerarrow" src="arrow.svg">
+      made by <a href="webkid.io">webkid.io</a>
+    </footer>
 
     </div>
 
@@ -131,18 +337,27 @@ new L.SwoopyArrow([53.52, 13.4], [53.525, 14.405], {
   <script>
     const map = L.map('map', {
       center: [52.52, 13.4],
-      zoom: 4
+      zoom: 4,
+      zoomControl: false,
+      zoomDelta: .25,
+      zoomSnap: .25
     });
 
+    let isEnabled = false;
+    disableMap();
+
+    L.control.zoom({ position: 'topright' }).addTo(map);
+
     new L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      attribution: `attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>`,
+      detectRetina: true
     }).addTo(map);
 
     new L.SwoopyArrow([56, 1], [52.52, 13.4], {
-      htmlLabel: 'Hi, I am swoopy arrow.',
+      text: 'Hi, I am swoopy arrow.',
       fontSize: 16,
       color: '#64A7D9',
-      labelClassName: 'swoopy-arrow',
+      textClassName: 'swoopy-arrow',
       opacity: .62,
       minZoom: 2,
       maxZoom: 10,
@@ -151,6 +366,117 @@ new L.SwoopyArrow([53.52, 13.4], [53.525, 14.405], {
       iconSize: [70, 16],
       weight: 2
     }).addTo(map);
+
+    const activateBtn = document.querySelector('.activate-btn');
+    activateBtn.addEventListener('click', () => {
+      if (isEnabled) {
+        activateBtn.innerHTML = 'Activate Map';
+        disableMap()
+      } else {
+        activateBtn.innerHTML = 'Deactivate Map';
+        enableMap()
+      };
+      isEnabled = !isEnabled;
+    });
+
+    function disableMap() {
+      map.dragging.disable();
+      map.touchZoom.disable();
+      map.doubleClickZoom.disable();
+      map.scrollWheelZoom.disable();
+      map.boxZoom.disable();
+      map.keyboard.disable();
+      if (map.tap) map.tap.disable();
+      document.getElementById('map').style.cursor='default';
+    }
+
+    function enableMap() {
+      map.dragging.enable();
+      map.touchZoom.enable();
+      map.doubleClickZoom.enable();
+      map.scrollWheelZoom.enable();
+      map.boxZoom.enable();
+      map.keyboard.enable();
+      if (map.tap) map.tap.enable();
+      document.getElementById('map').style.cursor='grab';
+    }
+
+  </script>
+
+  <script>
+  // create options table
+  const options = [{
+    option: 'color',
+    type: 'String',
+    default: '#222222',
+    description: 'Color of the swoopy arrow.'
+  }, {
+    option: 'weight',
+    type: 'String',
+    default: 'null',
+    description: 'Weight of the arrow.'
+  }, {
+    option: 'opacity',
+    type: 'Number',
+    default: 1,
+    description: 'Opacity of the arrow.'
+  }, {
+    option: 'factor',
+    type: 'Number',
+    default: 0.5,
+    description: 'The higher the factor the more curved is the arrow.'
+  }, {
+    option: 'minZoom',
+    type: 'Number',
+    default: 0,
+    description: 'The minimum zoom level where the arrow is visible.'
+  }, {
+    option: 'maxZoom',
+    type: 'Number',
+    default: 0,
+    description: 'The maximum zoom level where the arrow is visible.'
+  }, {
+    option: 'text',
+    type: 'String',
+    default: 'null',
+    description: 'Text label at the fromLngLat position.'
+  }, {
+    option: 'fontSize',
+    type: 'Number',
+    default: '12',
+    description: 'Font size of the text.'
+  }, {
+    option: 'fontColor',
+    type: 'String',
+    default: '#222222',
+    description: 'Font color of the text.'
+  }, {
+    option: 'textClassName',
+    type: 'String',
+    default: '""',
+    description: 'A class that gets addded to the label.'
+  }, {
+    option: 'iconAnchor',
+    type: 'Point',
+    default: '[0, 0]',
+    description: 'The coordinates of the "tip" of the text (relative to its top left corner). We are using a Leaflet divIcon in order to create the text.'
+  }, {
+    option: 'iconSize',
+    type: 'Point',
+    default: '[50, 20]',
+    description: 'Size of the text in pixels. We are using a Leaflet divIcon in order to create the text.'
+  }];
+
+  const tbody = document.querySelector('#tbody-options');
+
+  const trs = options.map(o => (`<tr>
+    <td class="code">${o.option}</td>
+    <td class="code">${o.type}</td>
+    <td class="code">${o.default}</td>
+    <td>${o.description}</td>
+  </tr>`)).join('');
+
+  tbody.innerHTML = trs;
   </script>
 </body>
 </html>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="86px" height="76px" viewBox="0 0 86 76" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Welcome" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop" transform="translate(-727.000000, -146.000000)">
+            <g id="arrow" transform="translate(769.500000, 184.000000) scale(1, -1) rotate(-90.000000) translate(-769.500000, -184.000000) translate(732.000000, 141.000000)">
+                <path d="M0.869368509,0.862626497 C0.869368509,53.6628355 22.9305183,80.5249888 67.0528178,81.4490863" id="Path-2" stroke="#64A7D9"></path>
+                <polygon id="Triangle" fill="#64A7D9" points="75 81.5 66 86 66 77"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>
