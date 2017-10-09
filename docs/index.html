@@ -171,6 +171,10 @@
     box-shadow: 0 2px 12px 2px rgba(0, 0, 0, .15);
   }
 
+  .leaflet-tile-container img {
+    filter: contrast(1.15);
+  }
+
   .swoopy-arrow {
     font-family: 'Roboto', sans-serif;
     font-weight: 700;
@@ -355,7 +359,7 @@ const swoopy = L.swoopyArrow([53.52, 13.4], [53.525, 14.41], {
     }).addTo(map);
 
     new L.SwoopyArrow([56, 1], [52.52, 13.4], {
-      text: 'Hi, I am swoopy arrow.',
+      text: 'Hi, I am a swoopy arrow!',
       fontSize: 16,
       color: '#64A7D9',
       textClassName: 'swoopy-arrow',
@@ -363,10 +367,25 @@ const swoopy = L.swoopyArrow([53.52, 13.4], [53.525, 14.41], {
       minZoom: 2,
       maxZoom: 10,
       factor: .6,
-      iconAnchor: [65, 5],
-      iconSize: [70, 16],
+      iconAnchor: [75, 5],
+      iconSize: [85, 16],
       weight: 2
     }).addTo(map);
+    
+    new L.SwoopyArrow([54.316365, 24.637743], [50.000512, 16.604392], {
+      text: 'Me too.',
+      fontSize: 14,
+      color: '#FFAB2E',
+      textClassName: 'swoopy-arrow',
+      opacity: 1,
+      minZoom: 2,
+      maxZoom: 10,
+      factor: .6,
+      iconAnchor: [-2, 15],
+      iconSize: [60, 16],
+      weight: 2
+    }).addTo(map);
+
 
     const activateBtn = document.querySelector('.activate-btn');
     activateBtn.addEventListener('click', () => {
