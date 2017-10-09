@@ -1,6 +1,6 @@
 {
   "name": "leaflet-swoopy",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Swoopy Arrow plugin for Leaflet",
   "main": "build/Leaflet.SwoopyArrow.js",
   "scripts": {
