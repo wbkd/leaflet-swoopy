@@ -1,4 +1,4 @@
-# 🍃 Leaflet Swoopy Arrow Plugin
+# :arrow_heading_down: Leaflet Swoopy Arrow Plugin
 
 You can find the docs on the plugin [website](https://wbkd.github.io/leaflet-swoopy/).
 
