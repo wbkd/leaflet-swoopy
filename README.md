@@ -7,7 +7,7 @@ You can find the docs on the plugin [website](https://wbkd.github.io/leaflet-swo
 
 ## Installation
 
-Install all dependencies running:
+You need Leaflet in order to run this plugin
 
 ```shell
 $ npm install leaflet-swoopy
