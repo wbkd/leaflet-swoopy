@@ -14,8 +14,8 @@ Install with npm/yarn:
 $ npm install leaflet-swoopy
 ```
 
-Or download the minified library from [unpkg](https://unpkg.com/leaflet-swoopy/build/Leaflet.SwoopyArrow.min.js) or [jsDelivr](https://cdn.jsdelivr.net/npm/leaflet-swoopy)
-```shell
+Or download the minified library from [unpkg](https://unpkg.com/leaflet-swoopy/build/Leaflet.SwoopyArrow.min.js) or [jsDelivr](https://cdn.jsdelivr.net/npm/leaflet-swoopy).
+```html
 <script src="https://unpkg.com/leaflet-swoopy"></script>
 ```
 
