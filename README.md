@@ -7,10 +7,16 @@ You can find the docs on the plugin [website](https://wbkd.github.io/leaflet-swo
 
 ## Installation
 
-You need Leaflet in order to run this plugin
+You need [Leaflet](http://leafletjs.com/) in order to run this plugin.
 
+Install with npm/yarn:
 ```shell
 $ npm install leaflet-swoopy
+```
+
+Or download the minified library from [unpkg](https://unpkg.com/leaflet-swoopy/build/Leaflet.SwoopyArrow.min.js) or [jsDelivr](https://cdn.jsdelivr.net/npm/leaflet-swoopy)
+```shell
+<script src="https://unpkg.com/leaflet-swoopy"></script>
 ```
 
 ## Usage
