@@ -1811,6 +1811,12 @@ L$1.SwoopyArrow = L$1.Layer.extend({
 
       this._currentPathVisible = false;
     }
+  },
+
+  onRemove: function onRemove(map) {
+    this._map = map;
+    this._currentPath.remove();
+    this._map.removeLayer(this._currentMarker);
   }
 });
 

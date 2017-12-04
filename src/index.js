@@ -195,6 +195,12 @@ L.SwoopyArrow = L.Layer.extend({
 
       this._currentPathVisible = false;
     }
+  },
+
+  onRemove: function(map) {
+    this._map = map;
+    this._currentPath.remove();
+    this._map.removeLayer(this._currentMarker);
   }
 });
 
