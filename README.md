@@ -29,7 +29,7 @@ import 'leaflet-swoopy';
 
 const swoopy = L.swoopyArrow([53.52, 13.4], [53.525, 14.41], {
   label: 'Hi!',
-  fontSize: 12,
+  labelFontSize: 12,
   iconAnchor: [20, 10],
   iconSize: [20, 16]
 }).addTo(map);
