@@ -2,7 +2,7 @@
 
 You can find the docs on the plugin [website](https://wbkd.github.io/leaflet-swoopy/).
 
-![swoopy screenshot](/docs/leaflet-swoopy-screenshot.png?raw=true)
+![swoopy screenshot](https://raw.githubusercontent.com/wbkd/leaflet-swoopy/master/docs/leaflet-swoopy-screenshot.png)
 
 
 ## Installation
