@@ -287,8 +287,8 @@ import 'leaflet-swoopy';
 // create leaflet map ...
 
 const swoopy = L.swoopyArrow([53.52, 13.4], [53.525, 14.41], {
-  annotation: 'Hi!',
-  fontSize: 12,
+  label: 'Hi!',
+  labelFontSize: 12,
   iconAnchor: [20, 10],
   iconSize: [20, 16]
 }).addTo(map);</code></pre>
@@ -370,10 +370,11 @@ const swoopy = L.swoopyArrow([53.52, 13.4], [53.525, 14.41], {
     }).addTo(map);
 
     new L.SwoopyArrow([56, 1], [52.52, 13.4], {
-      text: 'Hi, I am a swoopy arrow!',
-      fontSize: 16,
+      label: 'Hi, I am a swoopy arrow!',
+      labelFontSize: 16,
+      labelColor: '#64A7D9',
       color: '#64A7D9',
-      textClassName: 'swoopy-arrow',
+      labelClassName: 'swoopy-arrow',
       opacity: 1,
       minZoom: 2,
       maxZoom: 10,
@@ -384,16 +385,14 @@ const swoopy = L.swoopyArrow([53.52, 13.4], [53.525, 14.41], {
     }).addTo(map);
     
     new L.SwoopyArrow([54.316365, 24.637743], [50.000512, 16.604392], {
-      text: 'Me too.',
-      fontSize: 14,
+      html: '<marquee style="font-style: italic;"><h2>👉 You can also add custom html 👈</h2></marquee>',
       color: '#FFAB2E',
-      textClassName: 'swoopy-arrow',
       opacity: 1,
       minZoom: 2,
       maxZoom: 10,
       factor: .6,
-      iconAnchor: [-2, 15],
-      iconSize: [60, 16],
+      iconAnchor: [0, 17],
+      iconSize: [90, 16],
       weight: 2
     }).addTo(map);
 
@@ -444,7 +443,7 @@ const swoopy = L.swoopyArrow([53.52, 13.4], [53.525, 14.41], {
   }, {
     option: 'weight',
     type: 'String',
-    default: 'null',
+    default: 1,
     description: 'Weight of the arrow.'
   }, {
     option: 'opacity',
@@ -464,33 +463,38 @@ const swoopy = L.swoopyArrow([53.52, 13.4], [53.525, 14.41], {
   }, {
     option: 'maxZoom',
     type: 'Number',
-    default: 0,
+    default: 22,
     description: 'The maximum zoom level where the arrow is visible.'
   }, {
-    option: 'text',
+    option: 'label',
     type: 'String',
-    default: 'null',
+    default: '""',
     description: 'Text label at the fromLngLat position.'
   }, {
-    option: 'fontSize',
-    type: 'Number',
-    default: '12',
-    description: 'Font size of the text.'
-  }, {
-    option: 'fontColor',
-    type: 'String',
-    default: '#222222',
-    description: 'Font color of the text.'
-  }, {
-    option: 'textClassName',
+    option: 'labelClassName',
     type: 'String',
     default: '""',
     description: 'A class that gets addded to the label.'
   }, {
+    option: 'labelFontSize',
+    type: 'Number',
+    default: '12',
+    description: 'Font size of the text label.'
+  }, {
+    option: 'labelColor',
+    type: 'String',
+    default: '#222222',
+    description: 'Font color of the text label.'
+  },  {
+    option: 'html',
+    type: 'String',
+    default: '""',
+    description: 'Custom html label at the fromLngLat position. Replaces normal text label.'
+  }, {
     option: 'iconAnchor',
     type: 'Point',
     default: '[0, 0]',
-    description: 'The coordinates of the "tip" of the text (relative to its top left corner). We are using a Leaflet divIcon in order to create the text.'
+    description: 'Point of the icon which will correspond to marker position'
   }, {
     option: 'iconSize',
     type: 'Point',

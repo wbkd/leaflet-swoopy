@@ -9,17 +9,18 @@ L.SwoopyArrow = L.Layer.extend({
   fromLatlng: [],
   toLatlng: [],
   options: {
-    color: '#222',
+    color: '#222222',
     weight: 1,
     opacity: 1,
     factor: 0.5,
     arrowFilled: false,
     minZoom: 0,
     maxZoom: 22,
-    text: '',
-    fontSize: 12,
-    fontColor: '#222',
-    textClassName: '',
+    label: '',
+    labelClassName: '',
+    labelFontSize: 12,
+    labelColor: '#222222',
+    html: '',
     iconAnchor: [0, 0],
     iconSize: [50, 20],
   },
@@ -31,10 +32,12 @@ L.SwoopyArrow = L.Layer.extend({
     this._fromLatlng = L.latLng(fromLatlng);
     this._toLatlng = L.latLng(toLatlng);
     this._factor = this.options.factor;
-    this._text = this.options.text;
-    this._fontSize = this.options.fontSize;
+    this._label = this.options.label;
+    this._labelFontSize = this.options.labelFontSize;
+    this._labelColor = this.options.labelColor;
     this._color = this.options.color;
-    this._textClassName = this.options.textClassName;
+    this._labelClassName = this.options.labelClassName;
+    this._html = this.options.html;
     this._opacity = this.options.opacity;
     this._minZoom = this.options.minZoom;
     this._maxZoom = this.options.maxZoom;
@@ -164,8 +167,8 @@ L.SwoopyArrow = L.Layer.extend({
 
   _createLabel: function() {
     return L.divIcon({
-      className: this._textClassName,
-      html: `<span id="marker-label${this._currentId}" style="font-size: ${this._fontSize}px">${this._text}</span>`,
+      className: this._html === '' && this._labelClassName,
+      html: this._html === ''  ? `<span id="marker-label${this._currentId}" style="font-size: ${this._labelFontSize}px; color: ${this._labelColor}">${this._label}</span>` : this._html,
       iconAnchor: this._iconAnchor,
       iconSize: this._iconSize
     });
