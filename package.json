@@ -1,13 +1,17 @@
 {
   "name": "leaflet-swoopy",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Swoopy Arrow plugin for Leaflet",
-  "keywords": ["Leaflet", "Leaflet Plugin", "Swoopy Arrow"],
+  "keywords": [
+    "Leaflet",
+    "Leaflet Plugin",
+    "Swoopy Arrow"
+  ],
   "homepage": "https://wbkd.github.io/leaflet-swoopy/",
   "license": "MIT",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/wbkd/leaflet-swoopy.git"
+    "type": "git",
+    "url": "https://github.com/wbkd/leaflet-swoopy.git"
   },
   "main": "build/Leaflet.SwoopyArrow.js",
   "scripts": {
