@@ -2,6 +2,13 @@
   "name": "leaflet-swoopy",
   "version": "3.0.1",
   "description": "Swoopy Arrow plugin for Leaflet",
+  "keywords": ["Leaflet", "Leaflet Plugin", "Swoopy Arrow"],
+  "homepage": "https://wbkd.github.io/leaflet-swoopy/",
+  "license": "MIT",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/wbkd/leaflet-swoopy.git"
+  },
   "main": "build/Leaflet.SwoopyArrow.js",
   "scripts": {
     "start": "rollup -c -w",
@@ -10,7 +17,6 @@
     "build": "NODE_ENV=production rollup -c",
     "postbuild": "NODE_ENV=production rollup -c rollup.config.prod.js"
   },
-  "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.9.0",
     "babel-eslint": "^7.2.3",
