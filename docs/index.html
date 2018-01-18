@@ -376,6 +376,7 @@ const swoopy = L.swoopyArrow([53.52, 13.4], [53.525, 14.41], {
       color: '#64A7D9',
       labelClassName: 'swoopy-arrow',
       opacity: 1,
+      arrowFilled: true,
       minZoom: 2,
       maxZoom: 10,
       factor: .6,
@@ -383,7 +384,7 @@ const swoopy = L.swoopyArrow([53.52, 13.4], [53.525, 14.41], {
       iconSize: [85, 16],
       weight: 2
     }).addTo(map);
-    
+
     new L.SwoopyArrow([54.316365, 24.637743], [50.000512, 16.604392], {
       html: '<marquee style="font-style: italic;"><h2>👉 You can also add custom html 👈</h2></marquee>',
       color: '#FFAB2E',
@@ -455,7 +456,14 @@ const swoopy = L.swoopyArrow([53.52, 13.4], [53.525, 14.41], {
     type: 'Number',
     default: 0.5,
     description: 'The higher the factor the more curved is the arrow.'
-  }, {
+  },
+  {
+    option: 'arrowFilled',
+    type: 'Boolean',
+    default: false,
+    description: 'Define the style of the arrow head.'
+  }, 
+  {
     option: 'minZoom',
     type: 'Number',
     default: 0,
