@@ -1820,7 +1820,7 @@ L$1.SwoopyArrow = L$1.Layer.extend({
 
   onRemove: function onRemove(map) {
     this._map = map;
-    this._currentPath.remove();
+    this._currentPath.parentNode.removeChild(this._currentPath);
     this._map.removeLayer(this._currentMarker);
   }
 });
