@@ -1,4 +1,3 @@
-(function(l, i, v, e) { v = l.createElement(i); v.async = 1; v.src = '//' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; e = l.getElementsByTagName(i)[0]; e.parentNode.insertBefore(v, e)})(document, 'script');
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('leaflet')) :
 	typeof define === 'function' && define.amd ? define(['leaflet'], factory) :
@@ -1712,7 +1711,7 @@ L$1.SwoopyArrow = L$1.Layer.extend({
     var marker = L$1.SVG.create('marker');
     var path = L$1.SVG.create('polyline');
 
-    marker.classList.add('swoopyArrow__marker');
+    marker.className = 'swoopyArrow__marker';
     marker.setAttribute('id', 'swoopyarrow__arrowhead' + this._currentId);
     marker.setAttribute('markerWidth', '6.75');
     marker.setAttribute('markerHeight', '6.75');

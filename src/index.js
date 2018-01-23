@@ -87,7 +87,7 @@ L.SwoopyArrow = L.Layer.extend({
     const marker = L.SVG.create('marker');
     const path = L.SVG.create('polyline');
 
-    marker.classList.add('swoopyArrow__marker');
+    marker.className = 'swoopyArrow__marker';
     marker.setAttribute('id', `swoopyarrow__arrowhead${this._currentId}`);
     marker.setAttribute('markerWidth', '6.75');
     marker.setAttribute('markerHeight', '6.75');
