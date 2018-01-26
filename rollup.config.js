@@ -4,6 +4,7 @@ import replace from 'rollup-plugin-replace';
 import babel from 'rollup-plugin-babel';
 import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
+import html from 'rollup-plugin-html';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -39,11 +40,14 @@ export default {
       exclude: 'node_modules/**'
     }),
     !isProd && livereload({
-      watch: ['docs', 'build']
+      watch: ['docs', 'playground', 'build']
     }),
     !isProd && serve({
       port: 3000,
-      contentBase: ['docs', 'build']
+      contentBase: ['playground', 'docs', 'build']
+    }),
+    !isProd && html({
+      include: 'playground/index.html'
     })
   ]
 };
