@@ -1,4 +1,3 @@
-(function(l, i, v, e) { v = l.createElement(i); v.async = 1; v.src = '//' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; e = l.getElementsByTagName(i)[0]; e.parentNode.insertBefore(v, e)})(document, 'script');
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('leaflet')) :
 	typeof define === 'function' && define.amd ? define(['leaflet'], factory) :
@@ -1639,6 +1638,7 @@ L$1.SwoopyArrow = L$1.Layer.extend({
     opacity: 1,
     factor: 0.5,
     arrowFilled: false,
+    hideArrowHead: false,
     arrowId: null,
     minZoom: 0,
     maxZoom: 22,
@@ -1671,6 +1671,7 @@ L$1.SwoopyArrow = L$1.Layer.extend({
     this._iconSize = this.options.iconSize;
     this._weight = this.options.weight;
     this._arrowFilled = this.options.arrowFilled;
+    this._hideArrowHead = this.options.hideArrowHead;
     this._arrowId = this.options.arrowId;
 
     this._initSVG();
@@ -1725,11 +1726,13 @@ L$1.SwoopyArrow = L$1.Layer.extend({
     marker.setAttribute('stroke-width', this._weight);
     marker.setAttribute('opacity', this._opacity);
 
-    path.setAttribute('stroke-linejoin', 'bevel');
-    path.setAttribute('fill', this._arrowFilled ? this._color : 'none');
-    path.setAttribute('stroke', this._color);
-    path.setAttribute('points', '-6.75,-6.75 0,0 -6.75,6.75');
-    marker.appendChild(path);
+    if (!this._hideArrowHead) {
+      path.setAttribute('stroke-linejoin', 'bevel');
+      path.setAttribute('fill', this._arrowFilled ? this._color : 'none');
+      path.setAttribute('stroke', this._color);
+      path.setAttribute('points', '-6.75,-6.75 0,0 -6.75,6.75');
+      marker.appendChild(path);
+    }
 
     this._container.appendChild(marker);
 

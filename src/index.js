@@ -14,6 +14,7 @@ L.SwoopyArrow = L.Layer.extend({
     opacity: 1,
     factor: 0.5,
     arrowFilled: false,
+    hideArrowHead: false,
     arrowId: null,
     minZoom: 0,
     maxZoom: 22,
@@ -46,6 +47,7 @@ L.SwoopyArrow = L.Layer.extend({
     this._iconSize = this.options.iconSize;
     this._weight = this.options.weight;
     this._arrowFilled = this.options.arrowFilled;
+    this._hideArrowHead = this.options.hideArrowHead;
     this._arrowId = this.options.arrowId;
 
     this._initSVG();
@@ -100,11 +102,13 @@ L.SwoopyArrow = L.Layer.extend({
     marker.setAttribute('stroke-width', this._weight);
     marker.setAttribute('opacity', this._opacity);
 
-    path.setAttribute('stroke-linejoin', 'bevel');
-    path.setAttribute('fill', this._arrowFilled ? this._color : 'none');
-    path.setAttribute('stroke', this._color);
-    path.setAttribute('points', '-6.75,-6.75 0,0 -6.75,6.75');
-    marker.appendChild(path);
+    if(!this._hideArrowHead) {
+      path.setAttribute('stroke-linejoin', 'bevel');
+      path.setAttribute('fill', this._arrowFilled ? this._color : 'none');
+      path.setAttribute('stroke', this._color);
+      path.setAttribute('points', '-6.75,-6.75 0,0 -6.75,6.75');
+      marker.appendChild(path);
+    }
 
     this._container.appendChild(marker);
 
