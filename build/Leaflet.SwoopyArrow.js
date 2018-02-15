@@ -748,8 +748,8 @@ L$1.SwoopyArrow = L$1.Layer.extend({
     var radians = angle * Math.PI / 180.0;
 
     return {
-      x: Math.cos(radians) * (_point.x - origin.x) - Math.sin(radians) * (_point.y - origin.y) + origin.x,
-      y: Math.sin(radians) * (_point.x - origin.x) + Math.cos(radians) * (_point.y - origin.y) + origin.y
+      x: Math.cos(radians) * (point$$1.x - origin.x) - Math.sin(radians) * (point$$1.y - origin.y) + origin.x,
+      y: Math.sin(radians) * (point$$1.x - origin.x) + Math.cos(radians) * (point$$1.y - origin.y) + origin.y
     };
   },
 
