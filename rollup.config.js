@@ -1,5 +1,4 @@
 import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
 import replace from 'rollup-plugin-replace';
 import babel from 'rollup-plugin-babel';
 import serve from 'rollup-plugin-serve';
@@ -9,26 +8,23 @@ import html from 'rollup-plugin-html';
 const isProd = process.env.NODE_ENV === 'production';
 
 export default {
-  name: 'Leaflet.SwoopyArrow',
   input: 'src/index.js',
   output: {
+    name: 'Leaflet.SwoopyArrow',
     file: 'build/Leaflet.SwoopyArrow.js',
+    sourcemap: true,
+    globals: {
+      'leaflet': 'L'
+    },
     format: 'umd'
   },
-  sourcemap: true,
   external: [
     'leaflet',
   ],
-  globals: {
-    'leaflet': 'L'
-  },
   plugins: [
     resolve(),
     replace({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-    }),
-    commonjs({
-      include: ['node_modules/@turf/**/*']
     }),
     babel({
       presets: [
