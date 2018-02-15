@@ -1,6 +1,9 @@
 import L from 'leaflet';
 import '@webk1d/leaflet-curve';
-import turf from '@turf/helpers';
+import {
+  featureCollection as turfFeatureCollection,
+  point as turfPoint
+} from '@turf/helpers';
 import turfCenter from '@turf/center';
 
 let id = 0;
@@ -151,9 +154,9 @@ L.SwoopyArrow = L.Layer.extend({
   },
 
   _getControlPoint: function (start, end, factor) {
-    const features = turf.featureCollection([
-      turf.point([start.lat, start.lng]),
-      turf.point([end.lat, end.lng])
+    const features = turfFeatureCollection([
+      turfPoint([start.lat, start.lng]),
+      turfPoint([end.lat, end.lng])
     ]);
 
     const center = turfCenter(features);

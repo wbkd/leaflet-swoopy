@@ -20,9 +20,7 @@ export default {
     'leaflet',
   ],
   globals: {
-    'leaflet': 'L',
-    '@turf/helpers': 'turf',
-    '@turf/cernter': 'turfCenter'
+    'leaflet': 'L'
   },
   plugins: [
     resolve(),
@@ -30,7 +28,7 @@ export default {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     }),
     commonjs({
-      include: ['node_modules/@turf/**', 'node_modules/shortid/**']
+      include: ['node_modules/@turf/**/*']
     }),
     babel({
       presets: [
