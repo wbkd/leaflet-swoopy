@@ -28,6 +28,7 @@ L.SwoopyArrow = L.Layer.extend({
     html: '',
     iconAnchor: [0, 0],
     iconSize: [50, 20],
+    keyboard: true,
   },
 
   initialize: function (fromLatlng, toLatlng, options) {
@@ -52,6 +53,7 @@ L.SwoopyArrow = L.Layer.extend({
     this._arrowFilled = this.options.arrowFilled;
     this._hideArrowHead = this.options.hideArrowHead;
     this._arrowId = this.options.arrowId;
+    this._keyboard = this.options.keyboard;
 
     this._initSVG();
   },
@@ -84,7 +86,7 @@ L.SwoopyArrow = L.Layer.extend({
     this._currentPath = swoopyPath._path;
 
     const swoopyLabel = this._createLabel();
-    this._currentMarker = L.marker([this._fromLatlng.lat, this._fromLatlng.lng], { icon: swoopyLabel }).addTo(this._map);
+    this._currentMarker = L.marker([this._fromLatlng.lat, this._fromLatlng.lng], { icon: swoopyLabel, keyboard: this._keyboard }).addTo(this._map);
   },
 
   _createArrow: function () {

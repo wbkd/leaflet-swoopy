@@ -545,6 +545,11 @@ const swoopy = L.swoopyArrow([53.52, 13.4], [53.525, 14.41], {
     type: 'Point',
     default: '[50, 20]',
     description: 'Size of the text in pixels. We are using a Leaflet divIcon in order to create the text.'
+  }, {
+    option: 'keyboard',
+    type: 'Boolean',
+    default: true,
+    description: 'Whether the marker can be tabbed to with a keyboard and clicked by pressing enter.'
   }];
 
   const tbody = document.querySelector('#tbody-options');

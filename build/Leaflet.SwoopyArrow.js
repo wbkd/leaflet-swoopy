@@ -636,7 +636,8 @@ L$1.SwoopyArrow = L$1.Layer.extend({
     labelColor: '#222222',
     html: '',
     iconAnchor: [0, 0],
-    iconSize: [50, 20]
+    iconSize: [50, 20],
+    keyboard: true
   },
 
   initialize: function initialize(fromLatlng, toLatlng, options) {
@@ -661,6 +662,7 @@ L$1.SwoopyArrow = L$1.Layer.extend({
     this._arrowFilled = this.options.arrowFilled;
     this._hideArrowHead = this.options.hideArrowHead;
     this._arrowId = this.options.arrowId;
+    this._keyboard = this.options.keyboard;
 
     this._initSVG();
   },
@@ -693,7 +695,7 @@ L$1.SwoopyArrow = L$1.Layer.extend({
     this._currentPath = swoopyPath._path;
 
     var swoopyLabel = this._createLabel();
-    this._currentMarker = L$1.marker([this._fromLatlng.lat, this._fromLatlng.lng], { icon: swoopyLabel }).addTo(this._map);
+    this._currentMarker = L$1.marker([this._fromLatlng.lat, this._fromLatlng.lng], { icon: swoopyLabel, keyboard: this._keyboard }).addTo(this._map);
   },
 
   _createArrow: function _createArrow() {
