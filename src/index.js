@@ -54,8 +54,6 @@ L.SwoopyArrow = L.Layer.extend({
     this._hideArrowHead = this.options.hideArrowHead;
     this._arrowId = this.options.arrowId;
     this._keyboard = this.options.keyboard;
-
-    this._initSVG();
   },
 
   _initSVG: function () {
@@ -67,6 +65,9 @@ L.SwoopyArrow = L.Layer.extend({
 
   onAdd: function (map) {
     this._map = map;
+
+    this._initSVG();
+
     this.getPane().appendChild(this._svg);
 
     this._drawSwoopyArrows();
@@ -217,6 +218,8 @@ L.SwoopyArrow = L.Layer.extend({
 
   onRemove: function(map) {
     this._map = map;
+    L.DomUtil.empty(this._svg);
+    L.DomUtil.remove(this._svg);
     this._currentPath.parentNode.removeChild(this._currentPath);
     this._map.removeLayer(this._currentMarker);
   }
